@@ -22,7 +22,6 @@ app.get('/tasks', (req, res) => {
   res.send(tasksList);
 });
 
-
 // Scream routes
 app.get('/screams', getAllScreams);
 app.get('/scream/:screamId', getOneScream);
