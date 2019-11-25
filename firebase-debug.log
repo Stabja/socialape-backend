@@ -1,0 +1,506 @@
+[debug] [2019-11-25T00:53:58.413Z] ----------------------------------------------------------------------
+[debug] [2019-11-25T00:53:58.415Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2019-11-25T00:53:58.415Z] CLI Version:   7.7.0
+[debug] [2019-11-25T00:53:58.415Z] Platform:      darwin
+[debug] [2019-11-25T00:53:58.415Z] Node Version:  v12.12.0
+[debug] [2019-11-25T00:53:58.416Z] Time:          Mon Nov 25 2019 06:23:58 GMT+0530 (India Standard Time)
+[debug] [2019-11-25T00:53:58.416Z] ----------------------------------------------------------------------
+[debug] [2019-11-25T00:53:58.416Z] 
+[debug] [2019-11-25T00:53:58.427Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-11-25T00:53:58.428Z] > authorizing via signed-in user
+[debug] [2019-11-25T00:53:58.428Z] [iam] checking project socialape-d8699 for permissions ["firebase.projects.get"]
+[debug] [2019-11-25T00:53:58.429Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-11-25T00:53:58.429Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-11-25T00:53:58.615Z] <<< HTTP RESPONSE 200
+[debug] [2019-11-25T00:53:58.632Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/socialape-d8699:testIamPermissions  
+
+[debug] [2019-11-25T00:54:00.233Z] <<< HTTP RESPONSE 200
+[debug] [2019-11-25T00:54:00.234Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/socialape-d8699  
+ 
+[debug] [2019-11-25T00:54:00.702Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/swetabjahazra/Desktop/AAAAps/socialape-backend'...
+[info] 
+[warn] ⚠  Your requested "node" version "8" doesn't match your global version "12"
+[info] ✔  functions: Emulator started at http://localhost:5000
+[info] i  functions: Watching "/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions" for Cloud Functions...
+[debug] [2019-11-25T00:54:00.983Z] [worker-~diagnostic~-4ff62459-b3e3-459c-80cc-594fca8d143f]: BUSY
+[debug] [2019-11-25T00:54:01.186Z] [runtime-status] Functions runtime initialized. {"cwd":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions","node_version":"12.12.0"}
+[debug] [2019-11-25T00:54:01.186Z] [runtime-status] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"admin_stubs":true} {}
+[debug] [2019-11-25T00:54:01.191Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.7.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2019-11-25T00:54:01.192Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2019-11-25T00:54:01.192Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-functions/lib/index.js"}
+[info] ✔  functions[api]: http function initialized (http://localhost:5000/socialape-d8699/us-central1/api).
+[debug] [2019-11-25T00:54:01.724Z] [worker-~diagnostic~-4ff62459-b3e3-459c-80cc-594fca8d143f]: exited
+[debug] [2019-11-25T00:54:01.724Z] [worker-~diagnostic~-4ff62459-b3e3-459c-80cc-594fca8d143f]: FINISHED
+[debug] [2019-11-25T00:54:15.622Z] Accepted request GET /socialape-d8699/us-central1/api/screams --> api
+[debug] [2019-11-25T00:54:15.627Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: BUSY
+[debug] [2019-11-25T00:54:15.859Z] [runtime-status] Functions runtime initialized. {"cwd":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions","node_version":"12.12.0"}
+[debug] [2019-11-25T00:54:15.861Z] [runtime-status] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"admin_stubs":true} {}
+[debug] [2019-11-25T00:54:15.862Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.7.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2019-11-25T00:54:15.864Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2019-11-25T00:54:15.864Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2019-11-25T00:54:16.164Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-11-25T00:54:16.165Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-11-25T00:54:16.165Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-11-25T00:54:16.174Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:54:16.182Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:54:16.189Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-11-25T00:54:16.435Z] [runtime-status] Ephemeral server survived. {}
+[info] >  [
+[info] >    {
+[info] >      screamId: 'mbPe7ochIL0IN68yWXfk',
+[info] >      body: 'I got freed from a massive depression today.',
+[info] >      userHandle: 'stabja200',
+[info] >      createdAt: '2019-11-22T01:50:57.700Z'
+[info] >    },
+[info] >    {
+[info] >      screamId: 'SYLCTqtedzEqPwPcjsPU',
+[info] >      body: 'Another Scream Submitted',
+[info] >      userHandle: '13stabjahazra',
+[info] >      createdAt: '2019-11-21T22:10:25.353Z'
+[info] >    },
+[info] >    {
+[info] >      screamId: 'txQdnV6rmmbhrWK7PXcx',
+[info] >      body: 'New Scream 4',
+[info] >      userHandle: 'Jane',
+[info] >      createdAt: '2019-11-21T01:34:40.073Z'
+[info] >    },
+[info] >    {
+[info] >      screamId: 'lFdmlGMmf0Ka1dNBBaMV',
+[info] >      body: 'New scream 3',
+[info] >      userHandle: 'Johnny',
+[info] >      createdAt: Timestamp { _seconds: 1574299598, _nanoseconds: 317000000 }
+[info] >    },
+[info] >    {
+[info] >      screamId: 'ODxvVFBqeCaT41hRiyOS',
+[info] >      body: 'I am screwed',
+[info] >      userHandle: 'Khushboo',
+[info] >      createdAt: Timestamp { _seconds: 1573504897, _nanoseconds: 933000000 }
+[info] >    },
+[info] >    {
+[info] >      screamId: 'SvmnhE240Hs8MCg7GQrQ',
+[info] >      body: 'This is a test message',
+[info] >      userHandle: 'Stabja',
+[info] >      createdAt: Timestamp { _seconds: 1573474549, _nanoseconds: 508000000 }
+[info] >    },
+[info] >    {
+[info] >      screamId: 'V4xh0ac6lB7UUFrIEly0',
+[info] >      body: 'Second scream',
+[info] >      userHandle: 'user',
+[info] >      createdAt: Timestamp { _seconds: 1573327800, _nanoseconds: 0 }
+[info] >    },
+[info] >    {
+[info] >      screamId: 'SscCprrRZQ7q8br76U9P',
+[info] >      body: 'First Scream, Arrrgh',
+[info] >      userHandle: 'user',
+[info] >      createdAt: Timestamp { _seconds: 1573324200, _nanoseconds: 0 }
+[info] >    }
+[info] >  ]
+[info] >  {
+[info] >    mbPe7ochIL0IN68yWXfk: {
+[info] >      createdAt: '2019-11-22T01:50:57.700Z',
+[info] >      userHandle: 'stabja200',
+[info] >      body: 'I got freed from a massive depression today.'
+[info] >    },
+[info] >    SYLCTqtedzEqPwPcjsPU: {
+[info] >      body: 'Another Scream Submitted',
+[info] >      createdAt: '2019-11-21T22:10:25.353Z',
+[info] >      userHandle: '13stabjahazra'
+[info] >    },
+[info] >    txQdnV6rmmbhrWK7PXcx: {
+[info] >      userHandle: 'Jane',
+[info] >      body: 'New Scream 4',
+[info] >      createdAt: '2019-11-21T01:34:40.073Z'
+[info] >    },
+[info] >    lFdmlGMmf0Ka1dNBBaMV: {
+[info] >      createdAt: Timestamp { _seconds: 1574299598, _nanoseconds: 317000000 },
+[info] >      userHandle: 'Johnny',
+[info] >      body: 'New scream 3'
+[info] >    },
+[info] >    ODxvVFBqeCaT41hRiyOS: {
+[info] >      userHandle: 'Khushboo',
+[info] >      body: 'I am screwed',
+[info] >      createdAt: Timestamp { _seconds: 1573504897, _nanoseconds: 933000000 }
+[info] >    },
+[info] >    SvmnhE240Hs8MCg7GQrQ: {
+[info] >      userHandle: 'Stabja',
+[info] >      body: 'This is a test message',
+[info] >      createdAt: Timestamp { _seconds: 1573474549, _nanoseconds: 508000000 }
+[info] >    },
+[info] >    V4xh0ac6lB7UUFrIEly0: {
+[info] >      body: 'Second scream',
+[info] >      createdAt: Timestamp { _seconds: 1573327800, _nanoseconds: 0 },
+[info] >      userHandle: 'user'
+[info] >    },
+[info] >    SscCprrRZQ7q8br76U9P: {
+[info] >      createdAt: Timestamp { _seconds: 1573324200, _nanoseconds: 0 },
+[info] >      userHandle: 'user',
+[info] >      body: 'First Scream, Arrrgh'
+[info] >    }
+[info] >  }
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-11-25T00:54:17.472Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: IDLE
+[debug] [2019-11-25T00:54:28.090Z] Accepted request GET /socialape-d8699/us-central1/api/scream/mbPe7ochIL0IN68yWXfk --> api
+[debug] [2019-11-25T00:54:28.090Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: BUSY
+[debug] [2019-11-25T00:54:28.091Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-11-25T00:54:28.091Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-11-25T00:54:28.091Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-11-25T00:54:28.092Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:54:28.092Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:54:28.095Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-11-25T00:54:28.096Z] [runtime-status] Ephemeral server survived. {}
+[info] >  Document data: {
+[info] >    createdAt: '2019-11-22T01:50:57.700Z',
+[info] >    userHandle: 'stabja200',
+[info] >    body: 'I got freed from a massive depression today.'
+[info] >  }
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-11-25T00:54:28.249Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: IDLE
+[debug] [2019-11-25T00:54:33.653Z] Accepted request GET /socialape-d8699/us-central1/api/screams --> api
+[debug] [2019-11-25T00:54:33.654Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: BUSY
+[debug] [2019-11-25T00:54:33.654Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-11-25T00:54:33.654Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-11-25T00:54:33.654Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-11-25T00:54:33.655Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:54:33.656Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:54:33.659Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-11-25T00:54:33.659Z] [runtime-status] Ephemeral server survived. {}
+[info] >  [
+[info] >    {
+[info] >      screamId: 'mbPe7ochIL0IN68yWXfk',
+[info] >      body: 'I got freed from a massive depression today.',
+[info] >      userHandle: 'stabja200',
+[info] >      createdAt: '2019-11-22T01:50:57.700Z'
+[info] >    },
+[info] >    {
+[info] >      screamId: 'SYLCTqtedzEqPwPcjsPU',
+[info] >      body: 'Another Scream Submitted',
+[info] >      userHandle: '13stabjahazra',
+[info] >      createdAt: '2019-11-21T22:10:25.353Z'
+[info] >    },
+[info] >    {
+[info] >      screamId: 'txQdnV6rmmbhrWK7PXcx',
+[info] >      body: 'New Scream 4',
+[info] >      userHandle: 'Jane',
+[info] >      createdAt: '2019-11-21T01:34:40.073Z'
+[info] >    },
+[info] >    {
+[info] >      screamId: 'lFdmlGMmf0Ka1dNBBaMV',
+[info] >      body: 'New scream 3',
+[info] >      userHandle: 'Johnny',
+[info] >      createdAt: Timestamp { _seconds: 1574299598, _nanoseconds: 317000000 }
+[info] >    },
+[info] >    {
+[info] >      screamId: 'ODxvVFBqeCaT41hRiyOS',
+[info] >      body: 'I am screwed',
+[info] >      userHandle: 'Khushboo',
+[info] >      createdAt: Timestamp { _seconds: 1573504897, _nanoseconds: 933000000 }
+[info] >    },
+[info] >    {
+[info] >      screamId: 'SvmnhE240Hs8MCg7GQrQ',
+[info] >      body: 'This is a test message',
+[info] >      userHandle: 'Stabja',
+[info] >      createdAt: Timestamp { _seconds: 1573474549, _nanoseconds: 508000000 }
+[info] >    },
+[info] >    {
+[info] >      screamId: 'V4xh0ac6lB7UUFrIEly0',
+[info] >      body: 'Second scream',
+[info] >      userHandle: 'user',
+[info] >      createdAt: Timestamp { _seconds: 1573327800, _nanoseconds: 0 }
+[info] >    },
+[info] >    {
+[info] >      screamId: 'SscCprrRZQ7q8br76U9P',
+[info] >      body: 'First Scream, Arrrgh',
+[info] >      userHandle: 'user',
+[info] >      createdAt: Timestamp { _seconds: 1573324200, _nanoseconds: 0 }
+[info] >    }
+[info] >  ]
+[info] >  {
+[info] >    mbPe7ochIL0IN68yWXfk: {
+[info] >      createdAt: '2019-11-22T01:50:57.700Z',
+[info] >      userHandle: 'stabja200',
+[info] >      body: 'I got freed from a massive depression today.'
+[info] >    },
+[info] >    SYLCTqtedzEqPwPcjsPU: {
+[info] >      createdAt: '2019-11-21T22:10:25.353Z',
+[info] >      userHandle: '13stabjahazra',
+[info] >      body: 'Another Scream Submitted'
+[info] >    },
+[info] >    txQdnV6rmmbhrWK7PXcx: {
+[info] >      userHandle: 'Jane',
+[info] >      body: 'New Scream 4',
+[info] >      createdAt: '2019-11-21T01:34:40.073Z'
+[info] >    },
+[info] >    lFdmlGMmf0Ka1dNBBaMV: {
+[info] >      createdAt: Timestamp { _seconds: 1574299598, _nanoseconds: 317000000 },
+[info] >      userHandle: 'Johnny',
+[info] >      body: 'New scream 3'
+[info] >    },
+[info] >    ODxvVFBqeCaT41hRiyOS: {
+[info] >      userHandle: 'Khushboo',
+[info] >      body: 'I am screwed',
+[info] >      createdAt: Timestamp { _seconds: 1573504897, _nanoseconds: 933000000 }
+[info] >    },
+[info] >    SvmnhE240Hs8MCg7GQrQ: {
+[info] >      createdAt: Timestamp { _seconds: 1573474549, _nanoseconds: 508000000 },
+[info] >      userHandle: 'Stabja',
+[info] >      body: 'This is a test message'
+[info] >    },
+[info] >    V4xh0ac6lB7UUFrIEly0: {
+[info] >      userHandle: 'user',
+[info] >      body: 'Second scream',
+[info] >      createdAt: Timestamp { _seconds: 1573327800, _nanoseconds: 0 }
+[info] >    },
+[info] >    SscCprrRZQ7q8br76U9P: {
+[info] >      userHandle: 'user',
+[info] >      body: 'First Scream, Arrrgh',
+[info] >      createdAt: Timestamp { _seconds: 1573324200, _nanoseconds: 0 }
+[info] >    }
+[info] >  }
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-11-25T00:54:33.753Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: IDLE
+[debug] [2019-11-25T00:55:35.107Z] Accepted request POST /socialape-d8699/us-central1/api/login --> api
+[debug] [2019-11-25T00:55:35.107Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: BUSY
+[debug] [2019-11-25T00:55:35.108Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-11-25T00:55:35.109Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-11-25T00:55:35.109Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-11-25T00:55:35.109Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:55:35.110Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:55:35.125Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-11-25T00:55:35.131Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-11-25T00:55:36.134Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: IDLE
+[debug] [2019-11-25T00:56:25.841Z] Accepted request POST /socialape-d8699/us-central1/api/scream --> api
+[debug] [2019-11-25T00:56:25.841Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: BUSY
+[debug] [2019-11-25T00:56:25.842Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-11-25T00:56:25.842Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-11-25T00:56:25.842Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-11-25T00:56:25.843Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:56:25.843Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:56:25.846Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-11-25T00:56:25.878Z] [runtime-status] Ephemeral server survived. {}
+[info] >  decodedToken {
+[info] >    iss: 'https://securetoken.google.com/socialape-d8699',
+[info] >    aud: 'socialape-d8699',
+[info] >    auth_time: 1574643335,
+[info] >    user_id: 'iCWSDzCGR1h04UnLMyzNfJMfUjE2',
+[info] >    sub: 'iCWSDzCGR1h04UnLMyzNfJMfUjE2',
+[info] >    iat: 1574643335,
+[info] >    exp: 1574646935,
+[info] >    email: 'stabja200@gmail.com',
+[info] >    email_verified: false,
+[info] >    firebase: { identities: { email: [Array] }, sign_in_provider: 'password' },
+[info] >    uid: 'iCWSDzCGR1h04UnLMyzNfJMfUjE2'
+[info] >  }
+[info] >  {
+[info] >    body: 'Lets continue this damn project.',
+[info] >    userHandle: 'stabja200',
+[info] >    createdAt: '2019-11-25T00:56:26.120Z'
+[info] >  }
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-11-25T00:56:26.247Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: IDLE
+[debug] [2019-11-25T00:56:53.914Z] Accepted request POST /socialape-d8699/us-central1/api/scream --> api
+[debug] [2019-11-25T00:56:53.914Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: BUSY
+[debug] [2019-11-25T00:56:53.914Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-11-25T00:56:53.915Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-11-25T00:56:53.915Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-11-25T00:56:53.915Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:56:53.916Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:56:53.919Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-11-25T00:56:53.920Z] [runtime-status] Ephemeral server survived. {}
+[info] >  decodedToken {
+[info] >    iss: 'https://securetoken.google.com/socialape-d8699',
+[info] >    aud: 'socialape-d8699',
+[info] >    auth_time: 1574643335,
+[info] >    user_id: 'iCWSDzCGR1h04UnLMyzNfJMfUjE2',
+[info] >    sub: 'iCWSDzCGR1h04UnLMyzNfJMfUjE2',
+[info] >    iat: 1574643335,
+[info] >    exp: 1574646935,
+[info] >    email: 'stabja200@gmail.com',
+[info] >    email_verified: false,
+[info] >    firebase: { identities: { email: [Array] }, sign_in_provider: 'password' },
+[info] >    uid: 'iCWSDzCGR1h04UnLMyzNfJMfUjE2'
+[info] >  }
+[info] >  {
+[info] >    body: 'Lets continue this damn project.',
+[info] >    userHandle: 'stabja200',
+[info] >    createdAt: '2019-11-25T00:56:54.000Z'
+[info] >  }
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-11-25T00:56:54.176Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: IDLE
+[debug] [2019-11-25T00:57:52.886Z] Accepted request POST /socialape-d8699/us-central1/api/signup --> api
+[debug] [2019-11-25T00:57:52.886Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: BUSY
+[debug] [2019-11-25T00:57:52.886Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-11-25T00:57:52.887Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-11-25T00:57:52.887Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-11-25T00:57:52.887Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:57:52.888Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:57:52.891Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-11-25T00:57:52.892Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-11-25T00:57:54.423Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: IDLE
+[debug] [2019-11-25T00:58:42.356Z] Accepted request GET /socialape-d8699/us-central1/api/users --> api
+[debug] [2019-11-25T00:58:42.356Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: BUSY
+[debug] [2019-11-25T00:58:42.358Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-11-25T00:58:42.358Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-11-25T00:58:42.358Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-11-25T00:58:42.358Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:58:42.359Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:58:42.361Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-11-25T00:58:42.364Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-11-25T00:58:42.365Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: IDLE
+[debug] [2019-11-25T00:58:48.273Z] Accepted request GET /socialape-d8699/us-central1/api/screams --> api
+[debug] [2019-11-25T00:58:48.273Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: BUSY
+[debug] [2019-11-25T00:58:48.274Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-11-25T00:58:48.274Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-11-25T00:58:48.274Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-11-25T00:58:48.275Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:58:48.275Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:58:48.278Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-11-25T00:58:48.279Z] [runtime-status] Ephemeral server survived. {}
+[info] >  [
+[info] >    {
+[info] >      screamId: 'egzkiU1qDIAJ6yh37h68',
+[info] >      body: 'Lets continue this damn project.',
+[info] >      userHandle: 'stabja200',
+[info] >      createdAt: '2019-11-25T00:56:54.000Z'
+[info] >    },
+[info] >    {
+[info] >      screamId: 'mbPe7ochIL0IN68yWXfk',
+[info] >      body: 'I got freed from a massive depression today.',
+[info] >      userHandle: 'stabja200',
+[info] >      createdAt: '2019-11-22T01:50:57.700Z'
+[info] >    },
+[info] >    {
+[info] >      screamId: 'SYLCTqtedzEqPwPcjsPU',
+[info] >      body: 'Another Scream Submitted',
+[info] >      userHandle: '13stabjahazra',
+[info] >      createdAt: '2019-11-21T22:10:25.353Z'
+[info] >    },
+[info] >    {
+[info] >      screamId: 'txQdnV6rmmbhrWK7PXcx',
+[info] >      body: 'New Scream 4',
+[info] >      userHandle: 'Jane',
+[info] >      createdAt: '2019-11-21T01:34:40.073Z'
+[info] >    },
+[info] >    {
+[info] >      screamId: 'lFdmlGMmf0Ka1dNBBaMV',
+[info] >      body: 'New scream 3',
+[info] >      userHandle: 'Johnny',
+[info] >      createdAt: Timestamp { _seconds: 1574299598, _nanoseconds: 317000000 }
+[info] >    },
+[info] >    {
+[info] >      screamId: 'ODxvVFBqeCaT41hRiyOS',
+[info] >      body: 'I am screwed',
+[info] >      userHandle: 'Khushboo',
+[info] >      createdAt: Timestamp { _seconds: 1573504897, _nanoseconds: 933000000 }
+[info] >    },
+[info] >    {
+[info] >      screamId: 'SvmnhE240Hs8MCg7GQrQ',
+[info] >      body: 'This is a test message',
+[info] >      userHandle: 'Stabja',
+[info] >      createdAt: Timestamp { _seconds: 1573474549, _nanoseconds: 508000000 }
+[info] >    },
+[info] >    {
+[info] >      screamId: 'V4xh0ac6lB7UUFrIEly0',
+[info] >      body: 'Second scream',
+[info] >      userHandle: 'user',
+[info] >      createdAt: Timestamp { _seconds: 1573327800, _nanoseconds: 0 }
+[info] >    },
+[info] >    {
+[info] >      screamId: 'SscCprrRZQ7q8br76U9P',
+[info] >      body: 'First Scream, Arrrgh',
+[info] >      userHandle: 'user',
+[info] >      createdAt: Timestamp { _seconds: 1573324200, _nanoseconds: 0 }
+[info] >    }
+[info] >  ]
+[info] >  {
+[info] >    egzkiU1qDIAJ6yh37h68: {
+[info] >      createdAt: '2019-11-25T00:56:54.000Z',
+[info] >      userHandle: 'stabja200',
+[info] >      body: 'Lets continue this damn project.'
+[info] >    },
+[info] >    mbPe7ochIL0IN68yWXfk: {
+[info] >      createdAt: '2019-11-22T01:50:57.700Z',
+[info] >      userHandle: 'stabja200',
+[info] >      body: 'I got freed from a massive depression today.'
+[info] >    },
+[info] >    SYLCTqtedzEqPwPcjsPU: {
+[info] >      userHandle: '13stabjahazra',
+[info] >      body: 'Another Scream Submitted',
+[info] >      createdAt: '2019-11-21T22:10:25.353Z'
+[info] >    },
+[info] >    txQdnV6rmmbhrWK7PXcx: {
+[info] >      body: 'New Scream 4',
+[info] >      createdAt: '2019-11-21T01:34:40.073Z',
+[info] >      userHandle: 'Jane'
+[info] >    },
+[info] >    lFdmlGMmf0Ka1dNBBaMV: {
+[info] >      createdAt: Timestamp { _seconds: 1574299598, _nanoseconds: 317000000 },
+[info] >      userHandle: 'Johnny',
+[info] >      body: 'New scream 3'
+[info] >    },
+[info] >    ODxvVFBqeCaT41hRiyOS: {
+[info] >      createdAt: Timestamp { _seconds: 1573504897, _nanoseconds: 933000000 },
+[info] >      userHandle: 'Khushboo',
+[info] >      body: 'I am screwed'
+[info] >    },
+[info] >    SvmnhE240Hs8MCg7GQrQ: {
+[info] >      userHandle: 'Stabja',
+[info] >      body: 'This is a test message',
+[info] >      createdAt: Timestamp { _seconds: 1573474549, _nanoseconds: 508000000 }
+[info] >    },
+[info] >    V4xh0ac6lB7UUFrIEly0: {
+[info] >      createdAt: Timestamp { _seconds: 1573327800, _nanoseconds: 0 },
+[info] >      userHandle: 'user',
+[info] >      body: 'Second scream'
+[info] >    },
+[info] >    SscCprrRZQ7q8br76U9P: {
+[info] >      createdAt: Timestamp { _seconds: 1573324200, _nanoseconds: 0 },
+[info] >      userHandle: 'user',
+[info] >      body: 'First Scream, Arrrgh'
+[info] >    }
+[info] >  }
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-11-25T00:58:48.634Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: IDLE
+[debug] [2019-11-25T00:59:30.387Z] Accepted request GET /socialape-d8699/us-central1/api/scream/SvmnhE240Hs8MCg7GQrQ --> api
+[debug] [2019-11-25T00:59:30.387Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: BUSY
+[debug] [2019-11-25T00:59:30.388Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-11-25T00:59:30.388Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-11-25T00:59:30.389Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-11-25T00:59:30.389Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:59:30.390Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_804.sock"}
+[debug] [2019-11-25T00:59:30.393Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-11-25T00:59:30.393Z] [runtime-status] Ephemeral server survived. {}
+[info] >  Document data: {
+[info] >    body: 'This is a test message',
+[info] >    createdAt: Timestamp { _seconds: 1573474549, _nanoseconds: 508000000 },
+[info] >    userHandle: 'Stabja'
+[info] >  }
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-11-25T00:59:30.542Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: IDLE
+[debug] [2019-11-25T01:21:02.976Z] File /Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/index.js changed, reloading triggers
+[debug] [2019-11-25T01:21:03.981Z] [worker-pool]: Shutting down IDLE worker (api)
+[debug] [2019-11-25T01:21:03.987Z] [worker-~diagnostic~-8a46f3c3-ecc7-479a-80b1-6e5caa9a1ccb]: BUSY
+[debug] [2019-11-25T01:21:03.990Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: exited
+[debug] [2019-11-25T01:21:03.990Z] [worker-api-285cd66d-017c-4fe4-833c-dbbbf8e97df6]: FINISHED
+[debug] [2019-11-25T01:21:04.352Z] [runtime-status] Functions runtime initialized. {"cwd":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions","node_version":"12.12.0"}
+[debug] [2019-11-25T01:21:04.353Z] [runtime-status] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"admin_stubs":true} {}
+[debug] [2019-11-25T01:21:04.356Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.7.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2019-11-25T01:21:04.357Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2019-11-25T01:21:04.358Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2019-11-25T01:21:04.851Z] [worker-~diagnostic~-8a46f3c3-ecc7-479a-80b1-6e5caa9a1ccb]: exited
+[debug] [2019-11-25T01:21:04.852Z] [worker-~diagnostic~-8a46f3c3-ecc7-479a-80b1-6e5caa9a1ccb]: FINISHED
