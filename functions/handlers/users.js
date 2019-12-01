@@ -7,6 +7,7 @@ firebase.initializeApp(config);
 
 const { validateSignupData, validateLoginData, reduceUserDetails } = require('../util/validators');
 
+// User Registration
 exports.signup = (req, res) => {
   const newUser = {
     email: req.body.email,
@@ -66,8 +67,9 @@ exports.signup = (req, res) => {
         return res.status(500).json({ error: err.code });
       }
     });
-}
+};
 
+// User Login
 exports.login = (req, res) => {
   const user = {
     email: req.body.email,
@@ -102,17 +104,6 @@ exports.login = (req, res) => {
 // Add user details
 exports.addUserDetails = (req, res) => {
   let userDetails = reduceUserDetails(req.body);
-
-  /* db.collection('users')
-    .doc(req.user.handle)
-    .update(userDetails)
-    .then(() => {
-      return res.json({ message: 'Details added succesfully' });
-    })
-    .catch((err) => {
-      console.error(err);
-      return res.status(500).json({ error: err.code });
-    }); */
 
   db.doc(`/users/${req.user.handle}`)
     .update(userDetails)
@@ -151,6 +142,37 @@ exports.getAuthenticatedUser = (req, res) => {
     });
 };
 
+// Get profile details of an User
+exports.getProfileDetailsOfanUser = (req, res) => {
+  let profileDetails = {};
+  db.doc(`/users/${req.params.handle}`).get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      profileDetails = doc.data();
+      return db
+        .collection('screams')
+        .where('userHandle', '==', req.params.handle)
+        .get();
+    })
+    .then(data => {
+      profileDetails.screams = [];
+      data.forEach(doc => {
+        let scream = {};
+        scream.comments = [];
+        scream = doc.data();
+        scream.id = doc.id;
+        profileDetails.screams.push(scream);
+      });
+      return res.json(profileDetails);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: err.code });
+    });
+};
+
 // Upload a profile image for user
 exports.uploadImage = (req, res) => {
   const BusBoy = require('busboy');
@@ -169,8 +191,8 @@ exports.uploadImage = (req, res) => {
       return res.status(400).json({ error: 'Wrong file type submitted' });
     }
     // my.image.png => ['my', 'image', 'png']
-    //const arr = filename.split('.');
-    //const imageExtension = arr[arr.length - 1];
+    // const arr = filename.split('.');
+    // const imageExtension = arr[arr.length - 1];
     const imageExtension = filename.split('.')[filename.split('.').length - 1];
     // 32756238461724837.png
     imageFileName = `${Math.round(Math.random() * 100000000000)}.${imageExtension}`;

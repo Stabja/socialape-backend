@@ -1,12 +1,19 @@
 const functions = require('firebase-functions');
 
-const { getAllScreams, getOneScream, postOneScream } = require('./handlers/screams');
+const {
+  getOneScream,
+  getAllScreams, 
+  postOneScream, 
+  getScream,
+  commentOnScream
+} = require('./handlers/screams');
 const { 
   signup, 
   login, 
   uploadImage, 
   addUserDetails,
-  getAuthenticatedUser
+  getAuthenticatedUser,
+  getProfileDetailsOfanUser
 } = require('./handlers/users');
 
 const FBAuth = require('./util/fbAuth');
@@ -31,17 +38,25 @@ app.get('/tasks', (req, res) => {
 
 
 // Scream routes
+//app.get('/scream/:screamId', getOneScream);
 app.get('/screams', getAllScreams);
-app.get('/scream/:screamId', getOneScream);
 app.post('/scream', FBAuth, postOneScream);
-app.post('/user/image', FBAuth, uploadImage);
-app.post('/user', FBAuth, addUserDetails);
-app.get('/user', FBAuth, getAuthenticatedUser);
+app.post('/scream/:screamId/comment', FBAuth, commentOnScream);
+app.get('/scream/:screamId', getScream);
+// TODO: delete scream
+// TODO: like a scream
+// TODO: unlike a scream
+// TODO: comment on scream
 
 
 // Users Routes
 app.post('/signup', signup);
 app.post('/login', login);
+app.post('/user/image', FBAuth, uploadImage);
+app.post('/user', FBAuth, addUserDetails);
+app.get('/user', FBAuth, getAuthenticatedUser);
+app.get('/user/:handle/profile', getProfileDetailsOfanUser);
+
 
 exports.api = functions.https.onRequest(app);
 

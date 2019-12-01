@@ -1,0 +1,289 @@
+[debug] [2019-12-01T02:28:23.263Z] ----------------------------------------------------------------------
+[debug] [2019-12-01T02:28:23.265Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2019-12-01T02:28:23.265Z] CLI Version:   7.7.0
+[debug] [2019-12-01T02:28:23.265Z] Platform:      darwin
+[debug] [2019-12-01T02:28:23.265Z] Node Version:  v12.12.0
+[debug] [2019-12-01T02:28:23.270Z] Time:          Sun Dec 01 2019 07:58:23 GMT+0530 (India Standard Time)
+[debug] [2019-12-01T02:28:23.270Z] ----------------------------------------------------------------------
+[debug] [2019-12-01T02:28:23.270Z] 
+[debug] [2019-12-01T02:28:23.279Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-12-01T02:28:23.279Z] > authorizing via signed-in user
+[debug] [2019-12-01T02:28:23.279Z] [iam] checking project socialape-d8699 for permissions ["firebase.projects.get"]
+[debug] [2019-12-01T02:28:23.280Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-12-01T02:28:23.280Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-12-01T02:28:23.477Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-01T02:28:23.496Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/socialape-d8699:testIamPermissions  
+
+[debug] [2019-12-01T02:28:25.166Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-01T02:28:25.166Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/socialape-d8699  
+ 
+[debug] [2019-12-01T02:28:25.659Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/swetabjahazra/Desktop/AAAAps/socialape-backend'...
+[info] 
+[warn] ⚠  Your requested "node" version "8" doesn't match your global version "12"
+[info] ✔  functions: Emulator started at http://localhost:5000
+[info] i  functions: Watching "/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions" for Cloud Functions...
+[debug] [2019-12-01T02:28:25.948Z] [worker-~diagnostic~-87000aaf-8be3-4c61-ab15-7c7e04dcdbcc]: BUSY
+[debug] [2019-12-01T02:28:26.141Z] [runtime-status] Functions runtime initialized. {"cwd":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions","node_version":"12.12.0"}
+[debug] [2019-12-01T02:28:26.142Z] [runtime-status] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"admin_stubs":true} {}
+[debug] [2019-12-01T02:28:26.146Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.7.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2019-12-01T02:28:26.147Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2019-12-01T02:28:26.148Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-functions/lib/index.js"}
+[info] ✔  functions[api]: http function initialized (http://localhost:5000/socialape-d8699/us-central1/api).
+[debug] [2019-12-01T02:28:26.738Z] [worker-~diagnostic~-87000aaf-8be3-4c61-ab15-7c7e04dcdbcc]: exited
+[debug] [2019-12-01T02:28:26.738Z] [worker-~diagnostic~-87000aaf-8be3-4c61-ab15-7c7e04dcdbcc]: FINISHED
+[debug] [2019-12-01T02:28:32.331Z] Accepted request GET /socialape-d8699/us-central1/api/scream/egzkiU1qDIAJ6yh37h68 --> api
+[debug] [2019-12-01T02:28:32.336Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:28:32.552Z] [runtime-status] Functions runtime initialized. {"cwd":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions","node_version":"12.12.0"}
+[debug] [2019-12-01T02:28:32.553Z] [runtime-status] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"admin_stubs":true} {}
+[debug] [2019-12-01T02:28:32.555Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.7.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2019-12-01T02:28:32.556Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2019-12-01T02:28:32.557Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2019-12-01T02:28:32.865Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:28:32.866Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:28:32.866Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:28:32.873Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:28:32.882Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:28:32.888Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:28:33.120Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:28:34.408Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:29:05.411Z] Accepted request GET /socialape-d8699/us-central1/api/scream/SvmnhE240Hs8MCg7GQrQ --> api
+[debug] [2019-12-01T02:29:05.411Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:29:05.411Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:29:05.412Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:29:05.412Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:29:05.413Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:29:05.413Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:29:05.417Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:29:05.417Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:29:05.842Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:29:33.799Z] Accepted request GET /socialape-d8699/us-central1/api/scream/SvmnhE240Hs8MCg7GQrQ/comment --> api
+[debug] [2019-12-01T02:29:33.799Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:29:33.800Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:29:33.800Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:29:33.800Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:29:33.800Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:29:33.801Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:29:33.803Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:29:33.806Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:29:33.806Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:31:12.863Z] Accepted request POST /socialape-d8699/us-central1/api/scream/egzkiU1qDIAJ6yh37h68/comment --> api
+[debug] [2019-12-01T02:31:12.864Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:31:12.864Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:31:12.864Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:31:12.864Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:31:12.865Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:31:12.865Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:31:12.881Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:31:12.914Z] [runtime-status] Ephemeral server survived. {}
+[info] >  Error while verifying token  FirebaseAuthError: Firebase ID token has expired. Get a fresh ID token from your client app and try again (auth/id-token-expired). See https://firebase.google.com/docs/auth/admin/verify-id-tokens for details on how to retrieve an ID token.
+[info] >      at FirebaseAuthError.FirebaseError [as constructor] (/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/utils/error.js:42:28)
+[info] >      at FirebaseAuthError.PrefixedFirebaseError [as constructor] (/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/utils/error.js:88:28)
+[info] >      at new FirebaseAuthError (/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/utils/error.js:147:16)
+[info] >      at /Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/auth/token-verifier.js:191:39
+[info] >      at Object.module.exports [as verify] (/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/jsonwebtoken/verify.js:126:14)
+[info] >      at /Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/auth/token-verifier.js:183:17
+[info] >      at new Promise (<anonymous>)
+[info] >      at FirebaseTokenVerifier.verifyJwtSignatureWithKey (/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/auth/token-verifier.js:182:16)
+[info] >      at /Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/auth/token-verifier.js:167:30
+[info] >      at processTicksAndRejections (internal/process/task_queues.js:93:5) {
+[info] >    errorInfo: {
+[info] >      code: 'auth/id-token-expired',
+[info] >      message: 'Firebase ID token has expired. Get a fresh ID token from your client app and try again (auth/id-token-expired). See https://firebase.google.com/docs/auth/admin/verify-id-tokens for details on how to retrieve an ID token.'
+[info] >    },
+[info] >    codePrefix: 'auth'
+[info] >  }
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:31:13.085Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:31:45.331Z] Accepted request POST /socialape-d8699/us-central1/api/login --> api
+[debug] [2019-12-01T02:31:45.331Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:31:45.331Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:31:45.332Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:31:45.332Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:31:45.332Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:31:45.333Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:31:45.335Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:31:45.343Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:31:46.464Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:33:26.661Z] Accepted request POST /socialape-d8699/us-central1/api/scream/lFdmlGMmf0Ka1dNBBaMV/comment --> api
+[debug] [2019-12-01T02:33:26.661Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:33:26.661Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:33:26.662Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:33:26.662Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:33:26.662Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:33:26.663Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:33:26.666Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:33:26.667Z] [runtime-status] Ephemeral server survived. {}
+[info] >  decodedToken {
+[info] >    iss: 'https://securetoken.google.com/socialape-d8699',
+[info] >    aud: 'socialape-d8699',
+[info] >    auth_time: 1575167505,
+[info] >    user_id: 'qElGBl1t0uRXfLnhEzqJyL4wdHI3',
+[info] >    sub: 'qElGBl1t0uRXfLnhEzqJyL4wdHI3',
+[info] >    iat: 1575167505,
+[info] >    exp: 1575171105,
+[info] >    email: '13stabjahazra@gmail.com',
+[info] >    email_verified: false,
+[info] >    firebase: { identities: { email: [Array] }, sign_in_provider: 'password' },
+[info] >    uid: 'qElGBl1t0uRXfLnhEzqJyL4wdHI3'
+[info] >  }
+[info] >  {
+[info] >    body: 'How many hours do you play ??',
+[info] >    createdAt: '2019-12-01T02:33:27.660Z',
+[info] >    screamId: 'lFdmlGMmf0Ka1dNBBaMV',
+[info] >    userHandle: '13stabjahazra',
+[info] >    imageUrl: 'https://firebasestorage.googleapis.com/v0/b/socialape-d8699.appspot.com/o/75639991967.jpg?alt=media'
+[info] >  }
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:33:28.176Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:34:12.749Z] Accepted request GET /socialape-d8699/us-central1/api/user --> api
+[debug] [2019-12-01T02:34:12.749Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:34:12.749Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:34:12.750Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:34:12.750Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:34:12.750Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:34:12.751Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:34:12.753Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:34:12.756Z] [runtime-status] Ephemeral server survived. {}
+[info] >  Error while verifying token  FirebaseAuthError: Firebase ID token has expired. Get a fresh ID token from your client app and try again (auth/id-token-expired). See https://firebase.google.com/docs/auth/admin/verify-id-tokens for details on how to retrieve an ID token.
+[info] >      at FirebaseAuthError.FirebaseError [as constructor] (/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/utils/error.js:42:28)
+[info] >      at FirebaseAuthError.PrefixedFirebaseError [as constructor] (/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/utils/error.js:88:28)
+[info] >      at new FirebaseAuthError (/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/utils/error.js:147:16)
+[info] >      at /Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/auth/token-verifier.js:191:39
+[info] >      at Object.module.exports [as verify] (/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/jsonwebtoken/verify.js:126:14)
+[info] >      at /Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/auth/token-verifier.js:183:17
+[info] >      at new Promise (<anonymous>)
+[info] >      at FirebaseTokenVerifier.verifyJwtSignatureWithKey (/Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/auth/token-verifier.js:182:16)
+[info] >      at /Users/swetabjahazra/Desktop/AAAAps/socialape-backend/functions/node_modules/firebase-admin/lib/auth/token-verifier.js:167:30
+[info] >      at processTicksAndRejections (internal/process/task_queues.js:93:5) {
+[info] >    errorInfo: {
+[info] >      code: 'auth/id-token-expired',
+[info] >      message: 'Firebase ID token has expired. Get a fresh ID token from your client app and try again (auth/id-token-expired). See https://firebase.google.com/docs/auth/admin/verify-id-tokens for details on how to retrieve an ID token.'
+[info] >    },
+[info] >    codePrefix: 'auth'
+[info] >  }
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:34:12.759Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:34:29.261Z] Accepted request GET /socialape-d8699/us-central1/api/user --> api
+[debug] [2019-12-01T02:34:29.261Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:34:29.261Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:34:29.262Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:34:29.262Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:34:29.262Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:34:29.263Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:34:29.266Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:34:29.266Z] [runtime-status] Ephemeral server survived. {}
+[info] >  decodedToken {
+[info] >    iss: 'https://securetoken.google.com/socialape-d8699',
+[info] >    aud: 'socialape-d8699',
+[info] >    auth_time: 1575167505,
+[info] >    user_id: 'qElGBl1t0uRXfLnhEzqJyL4wdHI3',
+[info] >    sub: 'qElGBl1t0uRXfLnhEzqJyL4wdHI3',
+[info] >    iat: 1575167505,
+[info] >    exp: 1575171105,
+[info] >    email: '13stabjahazra@gmail.com',
+[info] >    email_verified: false,
+[info] >    firebase: { identities: { email: [Array] }, sign_in_provider: 'password' },
+[info] >    uid: 'qElGBl1t0uRXfLnhEzqJyL4wdHI3'
+[info] >  }
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:34:30.041Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:36:28.847Z] Accepted request GET /socialape-d8699/us-central1/api/user/13stabjahazra/profile --> api
+[debug] [2019-12-01T02:36:28.847Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:36:28.848Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:36:28.848Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:36:28.848Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:36:28.848Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:36:28.849Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:36:28.852Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:36:28.852Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:36:29.189Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:39:49.641Z] Accepted request GET /socialape-d8699/us-central1/api/scream/egzkiU1qDIAJ6yh37h68 --> api
+[debug] [2019-12-01T02:39:49.641Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:39:49.642Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:39:49.643Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:39:49.643Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:39:49.643Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:39:49.644Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:39:49.646Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:39:49.646Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:39:50.513Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:40:26.407Z] Accepted request GET /socialape-d8699/us-central1/api/user --> api
+[debug] [2019-12-01T02:40:26.407Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:40:26.407Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:40:26.408Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:40:26.408Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:40:26.408Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:40:26.409Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:40:26.411Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:40:26.412Z] [runtime-status] Ephemeral server survived. {}
+[info] >  decodedToken {
+[info] >    iss: 'https://securetoken.google.com/socialape-d8699',
+[info] >    aud: 'socialape-d8699',
+[info] >    auth_time: 1575167505,
+[info] >    user_id: 'qElGBl1t0uRXfLnhEzqJyL4wdHI3',
+[info] >    sub: 'qElGBl1t0uRXfLnhEzqJyL4wdHI3',
+[info] >    iat: 1575167505,
+[info] >    exp: 1575171105,
+[info] >    email: '13stabjahazra@gmail.com',
+[info] >    email_verified: false,
+[info] >    firebase: { identities: { email: [Array] }, sign_in_provider: 'password' },
+[info] >    uid: 'qElGBl1t0uRXfLnhEzqJyL4wdHI3'
+[info] >  }
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:40:26.816Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:41:13.946Z] Accepted request GET /socialape-d8699/us-central1/api/scream/egzkiU1qDIAJ6yh37h68 --> api
+[debug] [2019-12-01T02:41:13.946Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:41:13.947Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:41:13.947Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:41:13.947Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:41:13.948Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:41:13.949Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:41:13.951Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:41:13.952Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:41:14.632Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:42:56.374Z] Accepted request GET /socialape-d8699/us-central1/api/scream/lFdmlGMmf0Ka1dNBBaMV --> api
+[debug] [2019-12-01T02:42:56.374Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:42:56.374Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:42:56.375Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:42:56.375Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:42:56.375Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:42:56.376Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:42:56.378Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:42:56.378Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:42:56.707Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
+[debug] [2019-12-01T02:46:25.601Z] Accepted request GET /socialape-d8699/us-central1/api/scream/egzkiU1qDIAJ6yh37h68 --> api
+[debug] [2019-12-01T02:46:25.601Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: BUSY
+[debug] [2019-12-01T02:46:25.601Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-12-01T02:46:25.602Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-12-01T02:46:25.602Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-12-01T02:46:25.602Z] {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:46:25.603Z] [functions] Runtime ready! Sending request! {"socketPath":"/var/folders/5r/m4gt2p_15zz_bh_mb537lq0r0000gn/T/firebase_emulator_invocation_2560.sock"}
+[debug] [2019-12-01T02:46:25.605Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-12-01T02:46:25.605Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-12-01T02:46:26.245Z] [worker-api-a8fd6d37-3731-48c1-a7b3-193f8ef0f8fb]: IDLE
