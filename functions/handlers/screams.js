@@ -13,7 +13,10 @@ exports.getAllScreams = (req, res) => {
           screamId: doc.id,
           body: doc.data().body,
           userHandle: doc.data().userHandle,
-          createdAt: doc.data().createdAt
+          createdAt: doc.data().createdAt,
+          commentCount: doc.data().commentCount,
+          likeCount: doc.data().likeCount,
+          userImage: doc.data().userImage
         });
         map[doc.id] = doc.data();
       });
@@ -77,7 +80,7 @@ exports.getScream = (req, res) => {
 
 exports.commentOnScream = (req, res) => {
   if(req.body.body.trim() === '') {
-    return res.status(400).json({ body: 'Body must not be empty' });
+    return res.status(400).json({ comment: 'Must not be empty' });
   }
 
   const newComment = {
@@ -240,5 +243,46 @@ exports.deleteScream = (req, res) => {
     .catch(err => {
       console.error(err);
       return res.status(500).json({ error: err.code });
+    });
+};
+
+
+// Get all notifications
+exports.getAllNotifications = (req, res) => {
+  db.collection('notifications')
+    .get()
+    .then(snapshot => {
+      let notifications = [];
+      snapshot.forEach(doc => {
+        let notification = {};
+        notification = doc.data();
+        notification.nId = doc.id;
+        notifications.push(notification); 
+      });
+      return res.status(201).json(notifications);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: 'Something went wrong.' });
+    });
+};
+
+// Get all tags
+exports.getAllTags = (req, res) => {
+  db.collection('tags')
+    .get()
+    .then(snapshot => {
+      let tagsList = [];
+      snapshot.forEach(doc => {
+        tagsList.push(doc.id);
+      });
+      let tags = {
+        tags: tagsList
+      };
+      return res.status(201).json(tags);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: 'Something went wrong.' });
     });
 };
