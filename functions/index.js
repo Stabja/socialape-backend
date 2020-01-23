@@ -15,10 +15,9 @@ const {
   likeScream,
   unlikeScream,
   commentOnScream,
-  deleteScream,
-  getAllNotifications,
-  getAllTags
+  deleteScream
 } = require('./handlers/screams');
+
 const { 
   signup, 
   login, 
@@ -29,12 +28,22 @@ const {
   getUserDetails,
   markAllNotificationsRead,
   markOneNotificationRead,
-  markAllNotificationsUnread,
+} = require('./handlers/users');
+
+const {
   followUser,
   unfollowUser,
   followBack,
   revokeFollowBack
-} = require('./handlers/users');
+} = require('./handlers/followRoutes');
+
+const {
+  getAllTags,
+  getAllNotifications,
+  markAllNotificationsUnread,
+  addExtraUserDetails,
+  addScreamTags
+} = require('./handlers/utilRoutes');
 
 
 // Scream routes
@@ -46,7 +55,6 @@ app.delete('/scream/:screamId', FBAuth, deleteScream);
 app.get('/scream/:screamId/like', FBAuth, likeScream);
 app.get('/scream/:screamId/unlike', FBAuth, unlikeScream);
 app.post('/scream/:screamId/comment', FBAuth, commentOnScream);
-app.get('/tags', getAllTags);
 
 
 // Users Routes
@@ -59,6 +67,9 @@ app.get('/user/:handle/profile', getProfileDetailsOfanUser);
 app.get('/user/:handle', getUserDetails);
 app.post('/notifications', FBAuth, markAllNotificationsRead);
 app.get('/notification/:notificationId', FBAuth, markOneNotificationRead);
+
+
+// Follow routes
 app.post('/user/:handle/follow', FBAuth, followUser);
 app.post('/user/:followId/unfollow', FBAuth, unfollowUser);
 app.post('/user/:followId/followBack', FBAuth, followBack);
@@ -66,9 +77,11 @@ app.post('/user/:followId/revokeFollowBack', FBAuth, revokeFollowBack);
 
 
 // Utils Routes
+app.get('/tags', getAllTags);
 app.get('/notifications', getAllNotifications);
 app.get('/notifications/allunread', markAllNotificationsUnread);
-
+app.post('/addExtraUserDetails', addExtraUserDetails);
+app.post('/addScreamTags', addScreamTags);
 
 
 exports.api = functions.https.onRequest(app);
