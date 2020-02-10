@@ -27,6 +27,16 @@ let db = {
       body: 'nice one mate!',
       createdAt: '71qwu87216212198219'
     }
+  ],
+  notifications: [
+    {
+      recipient: 'user',
+      sender: 'john',
+      read: 'true | false',
+      screamId: 'shvcbadsbvbdsakvbda',
+      type: 'like | comment',
+      createdAt: '2019-03-15T10:59:52.798Z'
+    }
   ]
 };
 

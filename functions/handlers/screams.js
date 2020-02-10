@@ -1,6 +1,8 @@
 const { db, admin } = require('../util/admin');
 
 
+
+
 exports.getAllScreams = (req, res) => {
   db.collection('screams')
     .orderBy('createdAt', 'desc')
@@ -9,15 +11,9 @@ exports.getAllScreams = (req, res) => {
       let screams = [];
       var map = new Object();
       snapshot.forEach(doc => {
-        screams.push({
-          screamId: doc.id,
-          body: doc.data().body,
-          userHandle: doc.data().userHandle,
-          createdAt: doc.data().createdAt,
-          commentCount: doc.data().commentCount,
-          likeCount: doc.data().likeCount,
-          userImage: doc.data().userImage
-        });
+        oneScream = doc.data();
+        oneScream.screamId = doc.id;
+        screams.push(oneScream);
         map[doc.id] = doc.data();
       });
       console.log(screams);
@@ -139,6 +135,7 @@ exports.postOneScream = (req, res) => {
       return res.status(500).json({ error: 'Something went wrong' });
     });
 };
+
 
 //Like a scream
 exports.likeScream = (req, res) => {

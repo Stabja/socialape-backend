@@ -1,6 +1,7 @@
 const { db, admin } = require('../util/admin');
 
 
+
 exports.followUser = (req, res) => {
   const newFollower = {
     follower: req.user.handle,
@@ -16,9 +17,11 @@ exports.followUser = (req, res) => {
       //code to be added here
       return db.collection('followers').add(newFollower);
     })
-    .then(() => {
+    .then((doc) => {
       console.log(newFollower);
-      return res.json(newFollower);
+      let result = newFollower;
+      result.followerId = doc.id;
+      return res.json(result);
     })
     .catch(err => {
       console.log(err);
@@ -43,7 +46,7 @@ exports.unfollowUser = (req, res) => {
       return document.delete();
     })
     .then(() => {
-      res.json({ error: 'User unfollowed Successfully' });
+      res.json({ message: 'User unfollowed Successfully' });
     })
     .catch(err => {
       console.log(err);
@@ -64,7 +67,7 @@ exports.followBack = (req, res) => {
       if(doc.exists){
         //let followBackVar = doc.data().followBack;
         document.update({ followBack: true });
-        return res.status(404).json({ error: 'User followed Back' })
+        return res.json({ message: 'User followed Back' })
       }
     })
     .catch(err => {
@@ -86,11 +89,53 @@ exports.revokeFollowBack = (req, res) => {
       if(doc.exists){
         //let followBackVar = doc.data().followBack;
         document.update({ followBack: false });
-        return res.status(404).json({ error: 'Follow back revoked' });
+        return res.json({ message: 'Follow back revoked' });
       }
     })
     .catch(err => {
       console.log(err);
       return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.findFollower = (req, res) => {
+  db.collection('followers')
+    .where('follower', '==', req.user.handle)
+    .where('following', '==', req.params.handle)
+    .limit(1)
+    .get()
+    .then(data => {
+      if(data.empty){
+        return res.status(400).json({ error: 'No such follower Exists' });
+      }
+      return res.json({ followId: data.docs[0].id });
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(500).json({ error: 'Something went wrong' });
+    });
+};
+
+exports.findFollowed = (req, res) => {
+  db.collection('followers')
+    .where('follower', '==', req.params.handle)
+    .where('following', '==', req.user.handle)
+    .limit(1)
+    .get()
+    .then(data => {
+      if(data.empty){
+        return res.status(400).json({ error: 'No such follower Exists' });
+      }
+      return db.doc(`/followers/${data.docs[0].id}`).get();
+    })
+    .then(doc => {
+      let result = {};
+      result.followedBack = doc.data().followBack;
+      result.followedId = doc.id;
+      return res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(500).json({ error: 'Something went wrong' });
     });
 };
