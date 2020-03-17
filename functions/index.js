@@ -24,7 +24,8 @@ const {
   likeScream,
   unlikeScream,
   commentOnScream,
-  deleteScream
+  deleteScream,
+  getScreamByTag
 } = require('./handlers/screams');
 
 const {
@@ -64,6 +65,7 @@ app.get('/revoketoken/:uid', revokeToken);
 
 // Scream routes
 app.get('/screams', getAllScreams);
+app.get('/screams/:tag', getScreamByTag);
 app.post('/scream', FBAuth, postOneScream);
 app.get('/scream/:screamId', getScream);
 app.delete('/scream/:screamId', FBAuth, deleteScream);

@@ -1,8 +1,6 @@
 const { db, admin } = require('../util/admin');
 
 
-
-
 exports.getAllScreams = (req, res) => {
   db.collection('screams')
     .orderBy('createdAt', 'desc')
@@ -18,6 +16,27 @@ exports.getAllScreams = (req, res) => {
       });
       console.log(screams);
       console.log(map);
+      return res.json(screams);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+
+exports.getScreamByTag = (req, res) => {
+  const screamsRef = db.collection('screams');
+  console.log(req.params.tag);
+  screamsRef.where('tagList', 'array-contains', req.params.tag)
+    .get()
+    .then(snapshot => {
+      let screams = [];
+      snapshot.forEach(doc => {
+        let scream = doc.data();
+        scream.screamId = doc.id;
+        screams.push(scream);
+      });
+      console.log(screams);
       return res.json(screams);
     })
     .catch((err) => {

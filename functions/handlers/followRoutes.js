@@ -20,7 +20,7 @@ exports.followUser = (req, res) => {
     .then((doc) => {
       console.log(newFollower);
       let result = newFollower;
-      result.followerId = doc.id;
+      result.followId = doc.id;
       return res.json(result);
     })
     .catch(err => {
@@ -106,7 +106,12 @@ exports.findFollower = (req, res) => {
     .get()
     .then(data => {
       if(data.empty){
-        return res.status(400).json({ error: 'No such follower Exists' });
+        const emptyRes = {
+          followId: null,
+          followedId: null,
+          followedBack: false
+        };
+        return res.json(emptyRes);
       }
       return res.json({ followId: data.docs[0].id });
     })
@@ -124,7 +129,12 @@ exports.findFollowed = (req, res) => {
     .get()
     .then(data => {
       if(data.empty){
-        return res.status(400).json({ error: 'No such follower Exists' });
+        const emptyRes = {
+          followId: null,
+          followedId: null,
+          followedBack: false
+        };
+        return res.json(emptyRes);
       }
       return db.doc(`/followers/${data.docs[0].id}`).get();
     })
