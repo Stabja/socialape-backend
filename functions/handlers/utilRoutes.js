@@ -72,6 +72,22 @@ exports.addExtraUserDetails = (req, res) => {
     });
 };
 
+exports.addOneExtraUserDetail = (req, res) => {
+  const extraUserDetails = req.body;
+  db.doc(`/users/${req.params.handle}`).get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      doc.ref.update(extraUserDetails);
+      return res.json({ message: 'Extra Details Added Successfully.' });
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
 exports.addScreamTags = (req, res) => {
   const tagsList = [
     "animation",

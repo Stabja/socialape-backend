@@ -37,6 +37,25 @@ exports.getAuthenticatedUser = (req, res) => {
       data.forEach(doc => {
         userData.likes.push(doc.data());
       });
+      return db.collection('followers')
+        .where('follower', '==', req.user.handle)
+        .get();
+    })
+    .then((data) => {
+      userData.followers = [];
+      data.forEach(doc => {
+        let follower = doc.data();
+        follower.followId = doc.id;
+        userData.followers.push(follower);
+      });
+      return db.collection('followers')
+        .where('following', '==', req.user.handle)
+        .get();
+    })
+    .then((data) => {
+      data.forEach(doc => {
+        userData.followers.push(doc.data());
+      });
       return db.collection('notifications').where('recipient', '==', req.user.handle)
         .orderBy('createdAt', 'desc').limit(10).get();
     })
@@ -142,7 +161,8 @@ exports.uploadImage = (req, res) => {
   busboy.end(req.rawBody);
 };
 
-exports.getUserDetails = (req, res) => {
+
+exports.getUserDetailsWithAuth = (req, res) => {
   let userData = {};
   db.doc(`/users/${req.params.handle}`).get()
     .then(doc => {
@@ -170,6 +190,56 @@ exports.getUserDetails = (req, res) => {
           screamId: doc.id
         })
       });
+      if(req.user){
+        return db
+          .collection('followers')
+          .where('follower', '==', req.user.handle)
+          .where('following', '==', req.params.handle)
+          .limit(1)
+          .get();
+      } else {
+        return res.json(userData);
+      }
+    })
+    .then((data) => {
+      if(data.empty){
+        userData.follower = {
+          followId: null,
+          followedId: null,
+          followedBack: false
+        };
+        return db
+          .collection('followers')
+          .where('follower', '==', req.params.handle)
+          .where('following', '==', req.user.handle)
+          .limit(1)
+          .get()
+      } else {
+        userData.follower = {
+          followId: data.docs[0].id,
+          followedId: null,
+          followedBack: false
+        };
+        return res.json(userData);
+      }
+    })
+    .then((data) => {
+      if(data.empty){
+        userData.follower = {
+          followId: null,
+          followedId: null,
+          followedBack: false
+        };
+        return res.json(userData);
+      }
+      return db.doc(`/followers/${data.docs[0].id}`).get();
+    })
+    .then((doc) => {
+      userData.follower = {
+        followId: null,
+        followedId: doc.id,
+        followedBack: doc.data().followBack
+      }
       return res.json(userData);
     })
     .catch(err => {
@@ -178,25 +248,6 @@ exports.getUserDetails = (req, res) => {
     });
 };
 
-/* exports.markNotificationsReadOld = (req, res) => {
-  const docRef = db.doc(`/notifications/${req.params.notificationId}`);
-  db.doc(`/notifications/${req.params.notificationId}`).get()
-    .then(doc => {
-      if(!doc.exists){
-        return res.status(404).json({ error: 'Notification not found.' });
-      }
-      //Check whether the user logged is the one who received the notification
-      if(req.user.handle !== doc.data().recipient){
-        return res.json({ message: 'You are not authorized to read this notification.' });
-      }
-      docRef.update({ read: true });
-      return res.status(200).json({ message: 'Notification marked read.' });
-    })
-    .catch(err => {
-      console.error(err);
-      return res.status(500).json(err.code);
-    });
-}; */
 
 exports.markOneNotificationRead = (req, res) => {
   const docRef = db.doc(`/notifications/${req.params.notificationId}`);
@@ -217,6 +268,7 @@ exports.markOneNotificationRead = (req, res) => {
       return res.status(500).json(err.code);
     });
 };
+
 
 exports.markAllNotificationsRead = (req, res) => {
   let batch = db.batch();

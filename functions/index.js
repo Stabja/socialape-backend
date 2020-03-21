@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const { db } = require('./util/admin');
 const FBAuth = require('./util/fbAuth');
+const ProfileAuth = require('./util/profileAuth');
 const express = require('express');
 const app = express();
 
@@ -33,7 +34,7 @@ const {
   addUserDetails,
   getAuthenticatedUser,
   getProfileDetailsOfanUser,
-  getUserDetails,
+  getUserDetailsWithAuth,
   markAllNotificationsRead,
   markOneNotificationRead,
 } = require('./handlers/users');
@@ -52,6 +53,7 @@ const {
   getAllNotifications,
   markAllNotificationsUnread,
   addExtraUserDetails,
+  addOneExtraUserDetail,
   addScreamTags
 } = require('./handlers/utilRoutes');
 
@@ -79,7 +81,7 @@ app.post('/user/image', FBAuth, uploadImage);
 app.post('/user', FBAuth, addUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);
 app.get('/user/:handle/profile', getProfileDetailsOfanUser);
-app.get('/user/:handle', getUserDetails);
+app.get('/user/:handle', ProfileAuth,  getUserDetailsWithAuth);
 app.post('/notifications', FBAuth, markAllNotificationsRead);
 app.get('/notification/:notificationId', FBAuth, markOneNotificationRead);
 
@@ -98,6 +100,7 @@ app.get('/tags', getAllTags);
 app.get('/notifications', getAllNotifications);
 app.get('/notifications/allunread', markAllNotificationsUnread);
 app.post('/addExtraUserDetails', addExtraUserDetails);
+app.post('/addOneExtraUserDetail/:handle', addOneExtraUserDetail);
 app.post('/addScreamTags', addScreamTags);
 
 
