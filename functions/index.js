@@ -33,6 +33,8 @@ const {
   uploadImage, 
   addUserDetails,
   getAuthenticatedUser,
+  getScreamsFollowedByUser,
+  getFollowingListOfUser,
   getProfileDetailsOfanUser,
   getUserDetailsWithAuth,
   markAllNotificationsRead,
@@ -80,6 +82,8 @@ app.post('/scream/:screamId/comment', FBAuth, commentOnScream);
 app.post('/user/image', FBAuth, uploadImage);
 app.post('/user', FBAuth, addUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);
+app.get('/user/feed', FBAuth, getScreamsFollowedByUser);
+app.get('/user/following/:handle', getFollowingListOfUser);
 app.get('/user/:handle/profile', getProfileDetailsOfanUser);
 app.get('/user/:handle', ProfileAuth,  getUserDetailsWithAuth);
 app.post('/notifications', FBAuth, markAllNotificationsRead);

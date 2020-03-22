@@ -54,7 +54,9 @@ exports.getAuthenticatedUser = (req, res) => {
     })
     .then((data) => {
       data.forEach(doc => {
-        userData.followers.push(doc.data());
+        let follower = doc.data();
+        follower.followId = doc.id;
+        userData.followers.push(follower);
       });
       return db.collection('notifications').where('recipient', '==', req.user.handle)
         .orderBy('createdAt', 'desc').limit(10).get();
@@ -74,6 +76,56 @@ exports.getAuthenticatedUser = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+
+exports.getScreamsFollowedByUser = (req, res) => {
+  // First fetch all the followers of the user, then fetch screams of the followers
+  db.collection('followers')
+    .where('follower', '==', req.user.handle)
+    .get()
+    .then((data) => {
+      let followList = [];
+      data.forEach(doc => {
+        followList.push(doc.data().following);
+      });
+      return db.collection('screams')
+        .where('userHandle', 'in', followList)
+        .orderBy('createdAt', 'desc')
+        .get()
+    })
+    .then((data) => {
+      let usersFeed = [];
+      data.forEach(doc => {
+        let scream = doc.data();
+        scream.screamId = doc.id;
+        usersFeed.push(scream);
+      });
+      return res.json(usersFeed);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+
+exports.getFollowingListOfUser = (req, res) => {
+  db.collection('followers')
+    .where('follower', '==', req.params.handle)
+    .get()
+    .then((data) => {
+      let followList = [];
+      data.forEach(doc => {
+        followList.push(doc.data().following);
+      });
+      return res.json(followList);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
 
 // Get profile details of an User
 exports.getProfileDetailsOfanUser = (req, res) => {
@@ -180,15 +232,9 @@ exports.getUserDetailsWithAuth = (req, res) => {
     .then(data => {
       userData.screams = [];
       data.forEach(doc => {
-        userData.screams.push({
-          body: doc.data().body,
-          createdAt: doc.data().createdAt,
-          userHandle: doc.data().userHandle,
-          userImage: doc.data().userImage,
-          likeCount: doc.data().likeCount,
-          commentCount: doc.data().commentCount,
-          screamId: doc.id
-        })
+        let scream = doc.data();
+        scream.screamId = doc.id;
+        userData.screams.push(scream);
       });
       if(req.user){
         return db
