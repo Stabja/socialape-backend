@@ -56,8 +56,19 @@ const {
   markAllNotificationsUnread,
   addExtraUserDetails,
   addOneExtraUserDetail,
-  addScreamTags
+  addScreamTags,
+  getClientToken,
+  getJbTracks,
+  createNYTArticles,
+  getNYTArticlesCount,
+  getAnomalousItem,
+  setContentImageForAllScreams,
+  uploadAndDisplay
 } = require('./handlers/utilRoutes');
+
+const {
+  getAllTracks
+} = require('./handlers/tracks');
 
 //Triggers
 const triggers = require('./triggers/notificationTriggers');
@@ -106,6 +117,17 @@ app.get('/notifications/allunread', markAllNotificationsUnread);
 app.post('/addExtraUserDetails', addExtraUserDetails);
 app.post('/addOneExtraUserDetail/:handle', addOneExtraUserDetail);
 app.post('/addScreamTags', addScreamTags);
+app.get('/getClientToken', getClientToken);
+app.get('/getJbTracks', getJbTracks);
+app.get('/createNYTArticles', createNYTArticles);
+app.get('/getNYTArticlesCount', getNYTArticlesCount);
+app.get('/getAnomalousItem', getAnomalousItem);
+app.post('/setContentImage', setContentImageForAllScreams);
+app.post('/uploadAndDisplay', uploadAndDisplay);
+
+
+// Track Routes
+app.get('/tracks', getAllTracks);
 
 
 exports.api = functions.https.onRequest(app);

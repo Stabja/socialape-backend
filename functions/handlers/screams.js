@@ -1,4 +1,5 @@
 const { db, admin } = require('../util/admin');
+const parseFormData = require('../util/parseFormData');
 
 
 exports.getAllScreams = (req, res) => {
@@ -127,20 +128,58 @@ exports.commentOnScream = (req, res) => {
 };
 
 
-exports.postOneScream = (req, res) => {
-  if(req.body.body.trim() === '') {
+// Tricy function. Involves parsing DormData using Busboy
+exports.postOneScream = async (req, res) => {
+
+  // First upload the image and get the path, then post the Scream object
+  const parsedFormData = await parseFormData(
+    req.headers,
+    req.rawBody
+  );
+  console.log(parsedFormData);
+
+  if(parsedFormData.error){
+    console.log('Wrong file type submitted');
+    return res.status(400).json({ error: parsedFormData.error });
+  }
+
+  if(parsedFormData.body.trim() === '') {
     return res.status(400).json({ body: 'Body must not be empty' });
   }
 
+  // Convert parsedFormData.tagList to List
+  const tagsList = parsedFormData.tagList.split(',');
+
   const newScream = {
-    body: req.body.body,
+    body: parsedFormData.body,
     userHandle: req.user.handle,
     userImage: req.user.imageUrl,
+    contentImage: parsedFormData.contentImage,
+    tagList: tagsList,
     createdAt: new Date().toISOString(),
     likeCount: 0,
     commentCount: 0
   };
 
+  // Add the new tags in 'tags' collection
+  db.collection('tags').get()
+    .then((snapshot) => {
+      let fetchedTagList = [];
+      snapshot.forEach(doc => {
+        fetchedTagList.push(doc.id);
+      })
+      tagsList.forEach(tag => {
+        if(!fetchedTagList.includes(tag)){
+          db.collection('tags').doc(tag).set({});
+        }
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      console.log('Could not add Tags.');
+    });
+
+  // Add the new Scream in 'screams' collection 
   db.collection('screams')
     .add(newScream)
     .then((doc) => {
@@ -153,6 +192,7 @@ exports.postOneScream = (req, res) => {
       console.error(err);
       return res.status(500).json({ error: 'Something went wrong' });
     });
+  
 };
 
 
@@ -194,7 +234,7 @@ exports.likeScream = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).json({ error: err.code });
+      return res.status(500).json({ error: err.code });
     });
 };
 
@@ -254,7 +294,7 @@ exports.deleteScream = (req, res) => {
       }
     })
     .then(() => {
-      res.json({ message: 'Scream deleted succesfully' });
+      return res.json({ message: 'Scream deleted succesfully' });
     })
     .catch(err => {
       console.error(err);
