@@ -15,8 +15,8 @@ exports.getAllScreams = (req, res) => {
         screams.push(oneScream);
         map[doc.id] = doc.data();
       });
-      console.log(screams);
-      console.log(map);
+      //console.log(screams);
+      //console.log(map);
       return res.json(screams);
     })
     .catch((err) => {

@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const { db } = require('./util/admin');
 const FBAuth = require('./util/fbAuth');
+const TrackAuth = require('./util/trackAuth');
 const ProfileAuth = require('./util/profileAuth');
 const express = require('express');
 const app = express();
@@ -57,26 +58,43 @@ const {
   addExtraUserDetails,
   addOneExtraUserDetail,
   addScreamTags,
-  getClientToken,
-  getJbTracks,
-  createNYTArticles,
-  getNYTArticlesCount,
-  getAnomalousItem,
-  setContentImageForAllScreams,
-  uploadAndDisplay
+  uploadImageAndDisplayScreams,
+  setContentImageForAllScreams
 } = require('./handlers/utilRoutes');
 
 const {
-  getAllTracks
+  getClientTokenWithAxios,
+  getJbTracksWithAxios,
+  getClientToken,
+  getArtistsById,
+  getTracksById,
+  getTopTracksOfArtist,
+  getTracksByArtistIdExternal,
+  fetchTracksUsingPagination,
+  getTracksByArtistId,
+  getTracksByArtistName,
+  getTrackByTrackName,
+  getTrackById,
+  getTracksBetweenDates
 } = require('./handlers/tracks');
 
-//Triggers
+const {
+  createNYTArticles,
+  getNYTArticlesCount,
+  getAnomalousItem,
+  removeDuplicateArticles,
+  fetchArticlesUsingPagination
+} = require('./handlers/nytArticles')
+
+
 const triggers = require('./triggers/notificationTriggers');
+
 
 // Authentication Routes
 app.post('/signup', signup);
 app.post('/login', login);
 app.get('/revoketoken/:uid', revokeToken);
+
 
 // Scream routes
 app.get('/screams', getAllScreams);
@@ -117,17 +135,33 @@ app.get('/notifications/allunread', markAllNotificationsUnread);
 app.post('/addExtraUserDetails', addExtraUserDetails);
 app.post('/addOneExtraUserDetail/:handle', addOneExtraUserDetail);
 app.post('/addScreamTags', addScreamTags);
-app.get('/getClientToken', getClientToken);
-app.get('/getJbTracks', getJbTracks);
-app.get('/createNYTArticles', createNYTArticles);
-app.get('/getNYTArticlesCount', getNYTArticlesCount);
-app.get('/getAnomalousItem', getAnomalousItem);
+app.post('/uploadImageAndDisplay', uploadImageAndDisplayScreams);
 app.post('/setContentImage', setContentImageForAllScreams);
-app.post('/uploadAndDisplay', uploadAndDisplay);
 
 
-// Track Routes
-app.get('/tracks', getAllTracks);
+// Tracks Routes
+app.get('/tracks/get-axios-token', getClientTokenWithAxios);
+app.get('/tracks/justin-bieber', TrackAuth, getJbTracksWithAxios)
+app.get('/tracks/get-client-token', getClientToken);
+app.get('/tracks/artists', TrackAuth, getArtistsById);
+app.get('/tracks/tracks', TrackAuth, getTracksById)
+app.get('/tracks/top-tracks/:artistId', TrackAuth, getTopTracksOfArtist);
+app.post('/tracks/:artistId/external', TrackAuth, getTracksByArtistIdExternal);
+app.get('/tracks', fetchTracksUsingPagination);
+app.get('/tracks/by-artist-id', getTracksByArtistId);
+app.get('/tracks/by-artisty-name', getTracksByArtistName);
+app.get('/track/:name', getTrackByTrackName);
+app.get('/track', getTrackById);
+app.get('/tracks/inrange', getTracksBetweenDates);
+
+
+// NytArticles Routes
+app.post('/nytarticles/create', createNYTArticles);
+app.get('/nytarticles/getCount', getNYTArticlesCount);
+app.get('/nytarticles/removeOdd', getAnomalousItem);
+app.get('/nytarticles', fetchArticlesUsingPagination);
+app.delete('/nytarticles/removeDuplicate', removeDuplicateArticles);
+
 
 
 exports.api = functions.https.onRequest(app);
