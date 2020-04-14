@@ -4,6 +4,7 @@ const path = require('path');
 const os = require('os');
 const fs = require('fs');
 const config = require('./getconfig').config;
+const { fbstorage_url } = require('../config/externalUrls');
 
 
 module.exports = (headers, rawBody) => {
@@ -52,7 +53,7 @@ module.exports = (headers, rawBody) => {
           }
         })
       .then(() => {
-        const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+        const imageUrl = `${fbstorage_url}/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
         formData['contentImage'] = imageUrl
         return resolve(formData);
       })

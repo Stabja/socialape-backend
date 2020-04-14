@@ -1,7 +1,7 @@
 const { admin, db } = require('../util/admin');
 const { reduceUserDetails } = require('../util/validators');
-
 const config = require('../util/getconfig').config;
+const { fbstorage_url } = require('../config/externalUrls');
 
 
 // Add user details
@@ -199,7 +199,7 @@ exports.uploadImage = (req, res) => {
         }
       })
     .then(() => {
-      const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+      const imageUrl = `${fbstorage_url}/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
       return db.doc(`/users/${req.user.handle}`).update({ imageUrl });
     })
     .then(() => {

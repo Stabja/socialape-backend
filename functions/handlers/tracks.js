@@ -4,14 +4,24 @@ const querystring = require('querystring');
 const qs = require('qs');
 const request = require('request');
 const moment = require('moment');
+const validateCursor = require('../util/validateCursor');
+const { SPOTIFY_ENCODED_SECRET } = require('../config/constants');
+const {
+  spotify_token_url,
+  spotify_artist_url,
+  spotify_tracks_url,
+  spotify_toptracks_url,
+  jb_tracks_url,
+  tracks_url
+} = require('../config/externalUrls');
 
 
 // Get AccessToken using ClientId and ClientSecret (Axios Implementation)
 exports.getClientTokenWithAxios = (req, resp) => {
-  const clientIdSecret = 'MjRkYThmOTk0ZGJjNDIzZjgwODE4ODc1NzhjZjI5Yzc6MDI2YTg5YWNjNDZiNGQxMjg3ZjVlYjc3YjdjYmQ3MDI=';
+  const clientIdSecret = SPOTIFY_ENCODED_SECRET;
   const urlData = { 'grant_type': 'client_credentials' };
   const options = {
-    url: 'https://accounts.spotify.com/api/token',
+    url: spotify_token_url,
     method: 'POST',
     headers: { 
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -37,7 +47,7 @@ exports.getJbTracksWithAxios = (req, resp) => {
   const accessToken = req.accessToken;
 
   const options = {
-    url: 'https://api.spotify.com/v1/artists/1uNFoZAHBGtllmzznpCI3s/albums',
+    url: jb_tracks_url,
     method: 'GET',
     params: {
       limit,
@@ -60,9 +70,9 @@ exports.getJbTracksWithAxios = (req, resp) => {
 
 // Get AccessToken using ClientId and ClientSecret (Request Implementation)
 exports.getClientToken = (req, res) => {
-  const clientIdSecret = 'MjRkYThmOTk0ZGJjNDIzZjgwODE4ODc1NzhjZjI5Yzc6MDI2YTg5YWNjNDZiNGQxMjg3ZjVlYjc3YjdjYmQ3MDI=';
+  const clientIdSecret = SPOTIFY_ENCODED_SECRET;
   var authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
+    url: spotify_token_url,
     form: {
       grant_type: 'client_credentials'
     },
@@ -87,7 +97,7 @@ exports.getArtistsById = (req, res) => {
   const accessToken = req.accessToken;
 
   var options = {
-    url: 'https://api.spotify.com/v1/artists?' + 
+    url: spotify_artist_url + 
     querystring.stringify({
       ids: artistId
     }),
@@ -114,7 +124,7 @@ exports.getTracksById = (req, res) => {
   const accessToken = req.accessToken;
 
   var options = {
-    url: 'https://api.spotify.com/v1/tracks?' + 
+    url: spotify_tracks_url + 
     querystring.stringify({
       ids: trackIds,
       market
@@ -141,7 +151,7 @@ exports.getTopTracksOfArtist = (req, res) => {
   const accessToken = req.accessToken;
 
   var options = {
-    url: `https://api.spotify.com/v1/artists/${artistId}/top-tracks?` + 
+    url: `${spotify_toptracks_url}/${artistId}/top-tracks?` + 
     querystring.stringify({
       country
     }),
@@ -177,7 +187,7 @@ exports.getTracksByArtistIdExternal = (req, res) => {
       // If Artist doesnt exist, fetch from external API
       if(!doc.exists){
         var options = {
-          url: 'https://api.spotify.com/v1/artists?' + 
+          url: spotify_artist_url + 
           querystring.stringify({
             ids: artistId
           }),
@@ -211,7 +221,7 @@ exports.getTracksByArtistIdExternal = (req, res) => {
                     // If < 10 tracks exist for that Artist, fetch from external API
                     if(snapshot.docs.length < 10){
                       var trackOptions = {
-                        url: `https://api.spotify.com/v1/artists/${artistId}/albums?` + 
+                        url: `${spotify_toptracks_url}/${artistId}/albums?` + 
                         querystring.stringify({
                           limit,
                           market
@@ -306,80 +316,51 @@ exports.getTracksByArtistIdExternal = (req, res) => {
 };
 
 // Get all tracks from 'tracks' collection
-exports.fetchTracksUsingPagination = (req, res) => {
+exports.fetchTracksUsingPagination = async (req, res) => {
   let pageSize = parseInt(req.query.page_size);
   let cursor = req.query.cursor;
+  const baseUrl = tracks_url;
 
   if(!pageSize){
     return res.status(400).json({ error: 'page_size should not be null' });
   }
 
-  const baseUrl = 'http://localhost:5000/socialape-d8699/us-central1/api/tracks?';
-  if(cursor) {
-    db.doc(`/tracks/${cursor}`)
-      .get()
-      .then(doc => {
-        if(!doc.exists){
-          return res.status(400).json({ error: 'Invalid Cursor' });
-        }
-        return db.collection('tracks')
-          .orderBy('release_date', 'desc')
-          .startAfter(doc)
-          .limit(pageSize)
-          .get()
-      })
-      .then(snapshot => {
-        let tracksList = [];
-        snapshot.forEach(doc => {
-          console.log(doc.id);
-          tracksList.push(doc.data());
-        });
-        let nextCursor = tracksList[tracksList.length-1].id;
-        console.log('next_cursor', nextCursor);
-        let resJson = {};
-        resJson['collection'] = tracksList;
-        if(tracksList.length === pageSize) {
-          const urlQueries = querystring.stringify({
-            page_size: pageSize,
-            cursor: nextCursor
-          });
-          resJson['next_href'] = baseUrl + urlQueries;
-        }
-        return res.json(resJson);
-      })
-      .catch(err => {
-        console.error(err);
-        return res.status(500).json({ error: err.code });
-      });
-  } else {
-    db.collection('tracks')
-      .orderBy('release_date', 'desc')
-      .limit(pageSize)
-      .get()
-      .then(snapshot => {
-        let tracksList = [];
-        snapshot.forEach(doc => {
-          console.log(doc.id);
-          tracksList.push(doc.data());
-        });
-        const nextCursor = tracksList[tracksList.length-1].id;
-        console.log('next_cursor', nextCursor);
-        let resJson = {};
-        resJson['collection'] = tracksList;
-        if(tracksList.length === pageSize) {
-          const urlQueries = querystring.stringify({
-            page_size: pageSize,
-            cursor: nextCursor
-          });
-          resJson['next_href'] = baseUrl + urlQueries;
-        }
-        return res.json(resJson);
-      })
-      .catch(err => {
-        console.error(err);
-        return res.status(500).json({ error: err.code });
-      });
+  let firebaseQuery = null;
+  cursor
+    ? (firebaseQuery = await validateCursor(cursor, 'tracks', 'release_date', pageSize))
+    : (firebaseQuery = db.collection('tracks')
+        .orderBy('release_date', 'desc')
+        .limit(pageSize))
+
+  if(!firebaseQuery) {
+    return res.status(400).json({ error: 'Invalid Cursor' });
   }
+
+  firebaseQuery
+    .get()
+    .then(snapshot => {
+      let tracksList = [];
+      snapshot.forEach(doc => {
+        console.log(doc.id);
+        tracksList.push(doc.data());
+      });
+      const nextCursor = tracksList[tracksList.length-1].id;
+      console.log('next_cursor', nextCursor);
+      let resJson = {};
+      resJson['collection'] = tracksList;
+      if(tracksList.length === pageSize) {
+        const urlQueries = querystring.stringify({
+          page_size: pageSize,
+          cursor: nextCursor
+        });
+        resJson['next_href'] = baseUrl + urlQueries;
+      }
+      return res.json(resJson);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
 };
 
 
@@ -451,7 +432,7 @@ exports.getTrackByTrackName = (req, res) => {
   const trackName = req.params.name;
   db.collection('tracks')
     .where('name', '==', trackName)
-    //.limit(1)
+    .limit(1)
     .get()
     .then(data => {
       if(data.empty){

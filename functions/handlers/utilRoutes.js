@@ -1,6 +1,8 @@
 const { db, admin } = require('../util/admin');
 const config = require('../util/getconfig').config;
 const parseFormData = require('../util/parseFormData');
+const tagsList = require('../config/tagList');
+const { fbstorage_url } = require('../config/externalUrls');
 
 
 // Get all tags
@@ -91,34 +93,6 @@ exports.addOneExtraUserDetail = (req, res) => {
 };
 
 exports.addScreamTags = (req, res) => {
-  const tagsList = [
-    "animation",
-    "butt",
-    "caramel",
-    "cars",
-    "clean",
-    "coffee",
-    "computerScience",
-    "cookies",
-    "cryptocurrency",
-    "datascience",
-    "dragons",
-    "esports",
-    "flowers",
-    "gaming",
-    "happiness",
-    "japan",
-    "money",
-    "porsche",
-    "pubg",
-    "singapore",
-    "sugar",
-    "sushi",
-    "test",
-    "tourism",
-    "training"
-  ];
-  
   db.collection('screams')
     .get()
     .then(snapshot => {
@@ -136,8 +110,7 @@ exports.addScreamTags = (req, res) => {
     .catch(err => {
       console.log(err);
       return res.status(500).json({ error: err.code });
-    });
-    
+    });  
 };
 
 
@@ -204,7 +177,7 @@ exports.setContentImageForAllScreams = (req, res) => {
         }
       })
     .then(() => {
-      imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+      imageUrl = `${fbstorage_url}/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
       console.log(imageUrl);
       return db.collection('screams').get();
     })
