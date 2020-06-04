@@ -4,6 +4,7 @@ const FBAuth = require('./util/fbAuth');
 const TrackAuth = require('./util/trackAuth');
 const ProfileAuth = require('./util/profileAuth');
 const express = require('express');
+require('dotenv').config();
 const app = express();
 
 const cors = require('cors');
@@ -13,6 +14,8 @@ app.use(cors());
   maxAge: 31557600
 })); */
 
+console.log('Environment: ', process.env.NODE_ENV);
+
 const {
   signup,
   login,
@@ -20,9 +23,11 @@ const {
 } = require('./handlers/authentication');
 
 const {
-  getAllScreams, 
-  postOneScream, 
-  getScream,
+  getAllScreams,
+  getPaginatedScreams,
+  getCommentsByScreamId,
+  postOneScream,
+  getScreamById,
   likeScream,
   unlikeScream,
   commentOnScream,
@@ -83,11 +88,21 @@ const {
   getNYTArticlesCount,
   getAnomalousItem,
   removeDuplicateArticles,
-  fetchArticlesUsingPagination
+  fetchArticlesUsingPagination,
+  fetchOneArticleById,
+  lowercasePersons,
+  getArticlesByNewsdesk,
+  getArticlesByPerson,
+  getArticlesByKeyword,
+  createNewsdesks,
+  createPersons,
+  createKeywords,
 } = require('./handlers/nytArticles')
 
 
-const triggers = require('./triggers/notificationTriggers');
+const screamTriggers = require('./triggers/screamTriggers');
+const followTriggers = require('./triggers/followTriggers');
+
 
 
 // Authentication Routes
@@ -97,10 +112,12 @@ app.get('/revoketoken/:uid', revokeToken);
 
 
 // Scream routes
-app.get('/screams', getAllScreams);
+app.get('/allscreams', getAllScreams);
+app.get('/screams', getPaginatedScreams);
+app.get('/scream/:screamId', getScreamById);
+app.get('/scream/:screamId/comments', getCommentsByScreamId);
 app.get('/screams/:tag', getScreamByTag);
 app.post('/scream', FBAuth, postOneScream);
-app.get('/scream/:screamId', getScream);
 app.delete('/scream/:screamId', FBAuth, deleteScream);
 app.get('/scream/:screamId/like', FBAuth, likeScream);
 app.get('/scream/:screamId/unlike', FBAuth, unlikeScream);
@@ -160,14 +177,24 @@ app.post('/nytarticles/create', createNYTArticles);
 app.get('/nytarticles/getCount', getNYTArticlesCount);
 app.get('/nytarticles/removeOdd', getAnomalousItem);
 app.get('/nytarticles', fetchArticlesUsingPagination);
+app.get('/nytarticles/article/:articleId', fetchOneArticleById);
 app.delete('/nytarticles/removeDuplicate', removeDuplicateArticles);
+app.put('/nytarticles/lowercase-byline', lowercasePersons);
+app.get('/nytarticles/by-newsdesk/:newsdesk', getArticlesByNewsdesk);
+app.get('/nytarticles/by-person/:person', getArticlesByPerson);
+app.get('/nytarticles/by-keyword', getArticlesByKeyword);
+app.post('/nytarticles/newsdesks/create', createNewsdesks);
+app.post('/nytarticles/persons/create', createPersons);
+app.post('/nytarticles/keywords/:word/create', createKeywords);
 
 
+exports.api = functions.region('asia-east2').https.onRequest(app);
 
-exports.api = functions.https.onRequest(app);
+exports.createNotificationOnLike = screamTriggers.createNotificationOnLike;
+exports.deleteNotificationOnUnlike = screamTriggers.deleteNotificationOnUnlike;
+exports.createNotificationOnComment = screamTriggers.createNotificationOnComment;
+exports.onUserImageChange = screamTriggers.onUserImageChange;
+exports.onScreamDelete = screamTriggers.onScreamDelete;
 
-exports.createNotificationOnLike = triggers.createNotificationOnLike;
-exports.deleteNotificationOnUnlike = triggers.deleteNotificationOnUnlike;
-exports.createNotificationOnComment = triggers.createNotificationOnComment;
-exports.onUserImageChange = triggers.onUserImageChange;
-exports.onScreamDelete = triggers.onScreamDelete;
+exports.createNotificationOnFollow = followTriggers.createNotificationOnFollow;
+exports.createNotificationOnFollowBack = followTriggers.createNotificationOnFollowBack;

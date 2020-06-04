@@ -4,7 +4,10 @@ const querystring = require('querystring');
 const qs = require('qs');
 const request = require('request');
 const moment = require('moment');
-const validateCursor = require('../util/validateCursor');
+const { 
+  validateCursor,
+  paginateQuery
+} = require('../util/paginationUtils');
 const { SPOTIFY_ENCODED_SECRET } = require('../config/constants');
 const {
   spotify_token_url,
@@ -326,41 +329,23 @@ exports.fetchTracksUsingPagination = async (req, res) => {
   }
 
   let firebaseQuery = null;
-  cursor
-    ? (firebaseQuery = await validateCursor(cursor, 'tracks', 'release_date', pageSize))
-    : (firebaseQuery = db.collection('tracks')
+  if(cursor) {
+    let startingDoc = await validateCursor(cursor, 'tracks');
+    if(startingDoc) {
+      firebaseQuery = db.collection('tracks')
         .orderBy('release_date', 'desc')
-        .limit(pageSize))
-
-  if(!firebaseQuery) {
-    return res.status(400).json({ error: 'Invalid Cursor' });
+        .startAfter(startingDoc)
+        .limit(pageSize);
+    } else {
+      return res.status(400).json({ error: 'Innvalid Cursor' });
+    }
+  } else {
+    firebaseQuery = db.collection('tracks')
+      .orderBy('release_date',  'desc')
+      .limit(pageSize);
   }
 
-  firebaseQuery
-    .get()
-    .then(snapshot => {
-      let tracksList = [];
-      snapshot.forEach(doc => {
-        console.log(doc.id);
-        tracksList.push(doc.data());
-      });
-      const nextCursor = tracksList[tracksList.length-1].id;
-      console.log('next_cursor', nextCursor);
-      let resJson = {};
-      resJson['collection'] = tracksList;
-      if(tracksList.length === pageSize) {
-        const urlQueries = querystring.stringify({
-          page_size: pageSize,
-          cursor: nextCursor
-        });
-        resJson['next_href'] = baseUrl + urlQueries;
-      }
-      return res.json(resJson);
-    })
-    .catch(err => {
-      console.error(err);
-      return res.status(500).json({ error: err.code });
-    });
+  paginateQuery(firebaseQuery, baseUrl, pageSize, res);
 };
 
 

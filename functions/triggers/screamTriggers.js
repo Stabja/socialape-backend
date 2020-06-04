@@ -3,12 +3,16 @@ const functions = require('firebase-functions');
 
 
 
-
-exports.createNotificationOnLike = functions.firestore.document('/likes/{id}')
+exports.createNotificationOnLike = 
+functions
+  .region('asia-east2')
+  .firestore
+  .document('/likes/{id}')
   .onCreate((snapshot) => {
     return db.doc(`/screams/${snapshot.data().screamId}`)
       .get()
       .then(doc => {
+        // User cannot like his own scream
         if(doc.exists && doc.data().userHandle !== snapshot.data().userHandle){
           return db.doc(`/notifications/${snapshot.id}`).set({
             createdAt: new Date().toISOString(),
@@ -26,7 +30,11 @@ exports.createNotificationOnLike = functions.firestore.document('/likes/{id}')
 });
 
 
-exports.deleteNotificationOnUnlike = functions.firestore.document('/likes/{id}')
+exports.deleteNotificationOnUnlike = 
+functions
+  .region('asia-east2')
+  .firestore
+  .document('/likes/{id}')
   .onDelete(snapshot => {
     return db.doc(`/notifications/${snapshot.id}`)
       .delete()
@@ -37,7 +45,11 @@ exports.deleteNotificationOnUnlike = functions.firestore.document('/likes/{id}')
 });
 
 //Triggers
-exports.createNotificationOnComment = functions.firestore.document('/comments/{id}')
+exports.createNotificationOnComment = 
+functions
+  .region('asia-east2')
+  .firestore
+  .document('/comments/{id}')
   .onCreate(snapshot => {
     return db.doc(`/screams/${snapshot.data().screamId}`)
       .get()
@@ -60,7 +72,11 @@ exports.createNotificationOnComment = functions.firestore.document('/comments/{i
 });
 
 
-exports.onUserImageChange = functions.firestore.document('/users/{userId}')
+exports.onUserImageChange = 
+functions
+  .region('asia-east2')
+  .firestore
+  .document('/users/{userId}')
   .onUpdate((change) => {
     console.log(change.before.data());
     console.log(change.after.data());
@@ -83,7 +99,11 @@ exports.onUserImageChange = functions.firestore.document('/users/{userId}')
 
 
 // Delete all the likes, notifications and comments related to a scream when it is deleted
-exports.onScreamDelete = functions.firestore.document('/screams/{screamId}')
+exports.onScreamDelete = 
+functions
+  .region('asia-east2')
+  .firestore
+  .document('/screams/{screamId}')
   .onDelete((snapshot, context) => {
     const screamId = context.params.screamId;
     const batch = db.batch();

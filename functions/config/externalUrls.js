@@ -1,6 +1,15 @@
+let serverUrl = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:5000/socialape-d8699/asia-east2/api'
+  : 'https://asia-east2-socialape-d8699.cloudfunctions.net/api'
+
+
 module.exports = {
-  "nytarticles_url": "https://us-central1-socialape-d8699.cloudfunctions.net/api/nytarticles?",
-  "tracks_url": "https://us-central1-socialape-d8699.cloudfunctions.net/api/tracks?",
+  "all_screams_url": serverUrl + "/allscreams",
+  "nytarticles_url": serverUrl + "/nytarticles",
+  "tracks_url": serverUrl + "/tracks",
+  "screams_url": serverUrl + "/screams",
+  "comments_url": serverUrl + "/scream",
+
   "fbstorage_url": "https://firebasestorage.googleapis.com",
   "nytstorage_url": "https://static01.nyt.com/",
   "nytarticles_fetch_url": "https://api.nytimes.com/svc/archive/v1/2019/1.json?api-key=nVKEsWvJTRUDRwkH4ZDrZGkwBo26NYPR",

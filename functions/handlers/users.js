@@ -58,8 +58,11 @@ exports.getAuthenticatedUser = (req, res) => {
         follower.followId = doc.id;
         userData.followers.push(follower);
       });
-      return db.collection('notifications').where('recipient', '==', req.user.handle)
-        .orderBy('createdAt', 'desc').limit(10).get();
+      return db.collection('notifications')
+        .where('recipient', '==', req.user.handle)
+        .orderBy('createdAt', 'desc')
+        .limit(10)
+        .get();
     })
     .then(data => {
       userData.notifications = [];

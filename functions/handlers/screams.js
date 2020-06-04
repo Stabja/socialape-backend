@@ -1,5 +1,13 @@
 const { db, admin } = require('../util/admin');
 const parseFormData = require('../util/parseFormData');
+const {
+  validateCursor,
+  paginateQuery
+} = require('../util/paginationUtils');
+const {
+  screams_url,
+  comments_url
+} = require('../config/externalUrls');
 
 
 exports.getAllScreams = (req, res) => {
@@ -21,6 +29,98 @@ exports.getAllScreams = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
+    });
+};
+
+
+exports.getPaginatedScreams = async (req, res) => {
+  let pageSize = parseInt(req.query.page_size);
+  let cursor = req.query.cursor;
+  let baseUrl = screams_url;
+  
+  if(!pageSize){
+    return res.status(400).json({ error: 'page_size should not be null' });
+  }
+
+  let firebaseQuery = null;
+  if(cursor) {
+    let startingDoc = await validateCursor(cursor, 'screams');
+    if(startingDoc) {
+      firebaseQuery = db.collection('screams')
+        .orderBy('createdAt', 'desc')
+        .startAfter(startingDoc)
+        .limit(pageSize);
+    } else {
+      return res.status(400).json({ error: 'Invalid Cursor' });
+    }
+  } else {
+    firebaseQuery = db.collection('screams')
+      .orderBy('createdAt', 'desc')
+      .limit(pageSize);
+  }
+
+  paginateQuery(firebaseQuery, baseUrl, pageSize, res);
+};
+
+
+exports.getCommentsByScreamId = async (req, res) => {
+  let pageSize = parseInt(req.query.page_size);
+  let cursor = req.query.cursor;
+  let screamId = req.params.screamId;
+  let baseUrl = comments_url + `/${screamId}/comments`;
+
+  if(!pageSize){
+    return res.status(400).json({ error: 'page_size should not be null' });
+  }
+
+  let firebaseQuery = null;
+  if(cursor) {
+    let startingDoc = await validateCursor(cursor, 'comments');
+    if(cursor) {
+      firebaseQuery = db.collection('comments')
+        .where('screamId', '==', screamId)
+        .orderBy('createdAt', 'desc')
+        .startAfter(startingDoc)
+        .limit(pageSize);
+    } else {
+      return res.status(400).json({ error: 'Invalid Cursor' });
+    }
+  } else {
+    firebaseQuery = db.collection('comments')
+      .where('screamId', '==', screamId)
+      .orderBy('createdAt', 'desc')
+      .limit(pageSize);
+  }
+
+  paginateQuery(firebaseQuery, baseUrl, pageSize, res);
+};
+
+
+exports.getScreamById = (req, res) => {
+  let screamData = {};
+  db.doc(`/screams/${req.params.screamId}`).get()
+    .then(doc => {
+      if(!doc.exists){
+        return res.status(404).json({ error: 'Scream not found' });
+      }
+      screamData = doc.data();
+      screamData['screamId'] = doc.id;
+      return db
+        .collection('comments')
+        .orderBy('createdAt', 'desc')
+        .where('screamId', '==', req.params.screamId)
+        .get();
+    })
+    .then(data => {
+      screamData['comments'] = [];
+      data.forEach(doc => {
+        screamData['comments'].push(doc.data());
+      });
+      return res.json(screamData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: err.code });
     });
 };
 
@@ -61,35 +161,6 @@ exports.getOneScream = (req, res) => {
     .catch(err => {
       console.log(err);
       return res.status(500).json({ error: 'Something went wrong' });
-    });
-};
-
-
-exports.getScream = (req, res) => {
-  let screamData = {};
-  db.doc(`/screams/${req.params.screamId}`).get()
-    .then(doc => {
-      if(!doc.exists){
-        return res.status(404).json({ error: 'Scream not found' });
-      }
-      screamData = doc.data();
-      screamData['screamId'] = doc.id;
-      return db
-        .collection('comments')
-        .orderBy('createdAt', 'desc')
-        .where('screamId', '==', req.params.screamId)
-        .get();
-    })
-    .then(data => {
-      screamData['comments'] = [];
-      data.forEach(doc => {
-        screamData['comments'].push(doc.data());
-      });
-      return res.json(screamData);
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({ error: err.code });
     });
 };
 
