@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -10,7 +9,7 @@ firebase-debug.log*
 # Firebase cache
 .firebase/
 
-*.DS_Store
+.DS_Store
 
 # Firebase config
 
