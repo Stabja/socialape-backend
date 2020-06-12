@@ -45,6 +45,8 @@ module.exports = (req, res, next) => {
         userData.screams = [];
         data.forEach(doc => {
           userData.screams.push({
+            contentImage: doc.data().contentImage,
+            tagList: doc.data().tagList,
             body: doc.data().body,
             createdAt: doc.data().createdAt,
             userHandle: doc.data().userHandle,

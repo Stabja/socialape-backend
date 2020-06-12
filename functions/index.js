@@ -4,10 +4,11 @@ const FBAuth = require('./util/fbAuth');
 const TrackAuth = require('./util/trackAuth');
 const ProfileAuth = require('./util/profileAuth');
 const express = require('express');
-require('dotenv').config();
-const app = express();
-
 const cors = require('cors');
+require('dotenv').config();
+
+
+const app = express();
 app.use(cors());
 //const cacheControl = require('express-cache-controller');
 /* app.use(cacheControl({
@@ -97,11 +98,25 @@ const {
   createNewsdesks,
   createPersons,
   createKeywords,
-} = require('./handlers/nytArticles')
+} = require('./handlers/nytArticles');
 
+const {
+  exportAllData 
+} = require('./handlers/exportCollections');
 
-const screamTriggers = require('./triggers/screamTriggers');
-const followTriggers = require('./triggers/followTriggers');
+const {
+  createNotificationOnLike,
+  deleteNotificationOnUnlike,
+  createNotificationOnComment,
+  onUserImageChange,
+  onScreamDelete
+} = require('./triggers/screamTriggers');
+
+const {
+  createNotificationOnFollow,
+  createNotificationOnFollowBack
+} = require('./triggers/followTriggers');
+
 
 
 
@@ -146,8 +161,9 @@ app.post('/user/:followId/revokeFollowBack', FBAuth, revokeFollowBack);
 
 // Utils Routes
 app.get('/tags', getAllTags);
+app.get('/export-all-data', exportAllData);
 app.get('/notifications', getAllNotifications);
-app.get('/notifications/allunread', markAllNotificationsUnread);
+app.post('/notifications/allunread', markAllNotificationsUnread);
 app.post('/addExtraUserDetails', addExtraUserDetails);
 app.post('/addOneExtraUserDetail/:handle', addOneExtraUserDetail);
 app.post('/addScreamTags', addScreamTags);
@@ -187,13 +203,14 @@ app.post('/nytarticles/persons/create', createPersons);
 app.post('/nytarticles/keywords/:word/create', createKeywords);
 
 
+
 exports.api = functions.region('asia-east2').https.onRequest(app);
 
-exports.createNotificationOnLike = screamTriggers.createNotificationOnLike;
-exports.deleteNotificationOnUnlike = screamTriggers.deleteNotificationOnUnlike;
-exports.createNotificationOnComment = screamTriggers.createNotificationOnComment;
-exports.onUserImageChange = screamTriggers.onUserImageChange;
-exports.onScreamDelete = screamTriggers.onScreamDelete;
 
-exports.createNotificationOnFollow = followTriggers.createNotificationOnFollow;
-exports.createNotificationOnFollowBack = followTriggers.createNotificationOnFollowBack;
+exports.createNotificationOnLike = createNotificationOnLike;
+exports.deleteNotificationOnUnlike = deleteNotificationOnUnlike;
+exports.createNotificationOnComment = createNotificationOnComment;
+exports.onUserImageChange = onUserImageChange;
+exports.onScreamDelete = onScreamDelete;
+exports.createNotificationOnFollow = createNotificationOnFollow;
+exports.createNotificationOnFollowBack = createNotificationOnFollowBack;

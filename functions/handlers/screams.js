@@ -2,7 +2,8 @@ const { db, admin } = require('../util/admin');
 const parseFormData = require('../util/parseFormData');
 const {
   validateCursor,
-  paginateQuery
+  paginateQuery,
+  initializePagination
 } = require('../util/paginationUtils');
 const {
   screams_url,
@@ -16,15 +17,13 @@ exports.getAllScreams = (req, res) => {
     .get()
     .then(snapshot => {
       let screams = [];
-      var map = new Object();
+      var map = new Map();
       snapshot.forEach(doc => {
-        oneScream = doc.data();
-        oneScream.screamId = doc.id;
-        screams.push(oneScream);
+        let scream = doc.data();
+        scream.screamId = doc.id;
+        screams.push(scream);
         map[doc.id] = doc.data();
       });
-      //console.log(screams);
-      //console.log(map);
       return res.json(screams);
     })
     .catch((err) => {
@@ -39,27 +38,10 @@ exports.getPaginatedScreams = async (req, res) => {
   let baseUrl = screams_url;
   
   if(!pageSize){
-    return res.status(400).json({ error: 'page_size should not be null' });
+    pageSize = 6;
   }
 
-  let firebaseQuery = null;
-  if(cursor) {
-    let startingDoc = await validateCursor(cursor, 'screams');
-    if(startingDoc) {
-      firebaseQuery = db.collection('screams')
-        .orderBy('createdAt', 'desc')
-        .startAfter(startingDoc)
-        .limit(pageSize);
-    } else {
-      return res.status(400).json({ error: 'Invalid Cursor' });
-    }
-  } else {
-    firebaseQuery = db.collection('screams')
-      .orderBy('createdAt', 'desc')
-      .limit(pageSize);
-  }
-
-  paginateQuery(firebaseQuery, baseUrl, pageSize, res);
+  initializePagination('screams', 'createdAt', cursor, baseUrl, pageSize, res);
 };
 
 

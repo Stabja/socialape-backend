@@ -52,3 +52,24 @@ exports.paginateQuery = (query, baseUrl, pageSize, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+
+exports.initializePagination = async (collectionName, datefield, cursor, baseUrl, pageSize, res) => {
+  let firebaseQuery = null;
+  if(cursor) {
+    let startingDoc = await this.validateCursor(cursor, collectionName);
+    if(startingDoc) {
+      firebaseQuery = db.collection(collectionName)
+        .orderBy(datefield, 'desc')
+        .startAfter(startingDoc)
+        .limit(pageSize);
+    } else {
+      return res.status(400).json({ error: 'Invalid Cursor' });
+    }
+  } else {
+    firebaseQuery = db.collection(collectionName)
+      .orderBy(datefield, 'desc')
+      .limit(pageSize);
+  }
+  this.paginateQuery(firebaseQuery, baseUrl, pageSize, res);
+};

@@ -27,7 +27,7 @@ functions
       .catch(err => {
         console.error(err);
       });
-});
+  });
 
 
 exports.deleteNotificationOnUnlike = 
@@ -69,7 +69,7 @@ functions
         console.error(err);
         return;
       });
-});
+  });
 
 
 exports.onUserImageChange = 
