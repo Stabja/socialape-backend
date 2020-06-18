@@ -10,9 +10,8 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "8"
+    "node": "10"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "private": true
 }

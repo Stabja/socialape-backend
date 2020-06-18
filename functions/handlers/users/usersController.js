@@ -1,7 +1,8 @@
-const { admin, db } = require('../util/admin');
-const { reduceUserDetails } = require('../util/validators');
-const config = require('../util/getconfig').config;
-const { fbstorage_url } = require('../config/externalUrls');
+const { admin, db } = require('../../util/admin');
+const { reduceUserDetails } = require('../../util/validators');
+const config = require('../../util/getconfig').config;
+const { fbstorage_url } = require('../../config/externalUrls');
+const usersService = require('./usersService');
 
 
 // Add user details
@@ -37,8 +38,8 @@ exports.getAuthenticatedUser = (req, res) => {
       data.forEach(doc => {
         userData.likes.push(doc.data());
       });
-      return db.collection('followers')
-        .where('follower', '==', req.user.handle)
+      return db.collection('connections')
+        .where('sender.id', '==', req.user.handle)
         .get();
     })
     .then((data) => {
@@ -48,8 +49,8 @@ exports.getAuthenticatedUser = (req, res) => {
         follower.followId = doc.id;
         userData.followers.push(follower);
       });
-      return db.collection('followers')
-        .where('following', '==', req.user.handle)
+      return db.collection('connections')
+        .where('receiver.id', '==', req.user.handle)
         .get();
     })
     .then((data) => {
@@ -217,83 +218,52 @@ exports.uploadImage = (req, res) => {
 };
 
 
-exports.getUserDetailsWithAuth = (req, res) => {
+exports.getUserDetailsWithAuth = async (req, res) => {
+  let user = await db.doc(`/users/${req.params.handle}`).get();
+  if(!user.exists) {
+    return res.status(404).json({ error: 'User not found' });
+  }
   let userData = {};
-  db.doc(`/users/${req.params.handle}`).get()
-    .then(doc => {
-      if(doc.exists){
-        userData.user = doc.data();
-        return db
-          .collection('screams')
-          .where('userHandle', '==', req.params.handle)
-          .orderBy('createdAt', 'desc')
-          .get();
-      } else {
-        return res.status(404).json({ error: 'User not found' });
-      }
-    })
-    .then(data => {
-      userData.screams = [];
-      data.forEach(doc => {
-        let scream = doc.data();
-        scream.screamId = doc.id;
-        userData.screams.push(scream);
-      });
-      if(req.user){
-        return db
-          .collection('followers')
-          .where('follower', '==', req.user.handle)
-          .where('following', '==', req.params.handle)
-          .limit(1)
-          .get();
-      } else {
-        return res.json(userData);
-      }
-    })
-    .then((data) => {
-      if(data.empty){
-        userData.follower = {
-          followId: null,
-          followedId: null,
-          followedBack: false
+
+  userData.user = user.data();
+  let screamsList = usersService.getScreamsCreatedByUser(req.params.handle);
+  let likedScreams = usersService.getScreamsLikedByUser(req.params.handle);
+  let connectionsList = usersService.getUserConnections(req.params.handle);
+  let isUserFollower = usersService.findIfUserIsSender(req.user.handle, req.params.handle);
+  let isUserFollowing = usersService.findIfUserIsReceiver(req.user.handle, req.params.handle);
+
+  Promise.all([
+    screamsList,
+    likedScreams,
+    connectionsList,
+    isUserFollower,
+    isUserFollowing
+  ]).then(promises => {
+      userData.screams = promises[0];
+      userData.likedScreams = promises[1];
+      userData.connections = promises[2];
+      if(promises[3].docs.length > 0){
+        userData.connection = {
+          senderId: promises[3].docs[0].id,
+          receiverId: null,
+          connected: promises[3].docs[0].data().connected,
+          status: promises[3].docs[0].data().status
         };
-        return db
-          .collection('followers')
-          .where('follower', '==', req.params.handle)
-          .where('following', '==', req.user.handle)
-          .limit(1)
-          .get()
+      } else if (promises[4].docs.length > 0){
+        userData.connection = {
+          senderId: null,
+          receiverId: promises[4].docs[0].id,
+          connected: promises[4].docs[0].data().connected,
+          status: promises[4].docs[0].data().status
+        };
       } else {
-        userData.follower = {
-          followId: data.docs[0].id,
-          followedId: null,
-          followedBack: false
-        };
-        return res.json(userData);
-      }
-    })
-    .then((data) => {
-      if(data.empty){
-        userData.follower = {
-          followId: null,
-          followedId: null,
-          followedBack: false
-        };
-        return res.json(userData);
-      }
-      return db.doc(`/followers/${data.docs[0].id}`).get();
-    })
-    .then((doc) => {
-      userData.follower = {
-        followId: null,
-        followedId: doc.id,
-        followedBack: doc.data().followBack
+        userData.connection = null;
       }
       return res.json(userData);
     })
     .catch(err => {
       console.error(err);
-      return res.status(500).json({ error: err.code });
+      return res.status(500).json({ error: err.code })
     });
 };
 
@@ -310,7 +280,7 @@ exports.markOneNotificationRead = (req, res) => {
         return res.json({ message: 'You are not authorized to read this notification.' });
       }
       docRef.update({ read: true });
-      return res.status(200).json({ message: 'Notification marked read.' })
+      return res.status(200).json({ message: 'Notification marked read.' });
     })
     .catch(err => {
       console.error(err);

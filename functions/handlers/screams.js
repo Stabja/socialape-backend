@@ -22,6 +22,7 @@ exports.getAllScreams = (req, res) => {
         let scream = doc.data();
         scream.screamId = doc.id;
         screams.push(scream);
+        //doc.ref.update({ id: doc.id });
         map[doc.id] = doc.data();
       });
       return res.json(screams);

@@ -30,8 +30,7 @@
     "request": "^2.88.2"
   },
   "devDependencies": {
-    "firebase-functions-test": "^0.1.6",
-    "websocket-extensions": ">=0.1.4"
+    "firebase-functions-test": "^0.1.6"
   },
   "private": true
 }

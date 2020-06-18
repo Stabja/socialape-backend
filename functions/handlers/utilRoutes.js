@@ -3,6 +3,8 @@ const config = require('../util/getconfig').config;
 const parseFormData = require('../util/parseFormData');
 const tagsList = require('../config/tagList');
 const { fbstorage_url } = require('../config/externalUrls');
+const moment = require('moment');
+
 
 
 // Get all tags
@@ -196,3 +198,52 @@ exports.setContentImageForAllScreams = (req, res) => {
   busboy.end(req.rawBody);
 };
 
+
+exports.createConnectionsFromFollowers = async (req, res) => {
+  let followers = await db.collection('followers').get();
+  if(!followers){
+    throw new Error('Followers not found.');
+  }
+  let followerList = [];
+  let followingList = [];
+  followers.forEach(doc => {
+    followerList.push(db.doc(`/users/${doc.data().follower}`));
+    followingList.push(db.doc(`/users/${doc.data().following}`));
+  });
+  const followerDetails = await db.getAll(...followerList);
+  const followingDetails = await db.getAll(...followingList);
+  let followerDetailsList = [];
+  let followingDetailsList = [];
+  followerDetails.forEach(doc => {
+    followerDetailsList.push({
+      id: doc.id,
+      avatar: doc.data().imageUrl,
+      name: doc.data().fullName
+    });
+  });
+  followingDetails.forEach(doc => {
+    followingDetailsList.push({
+      id: doc.id,
+      avatar: doc.data().imageUrl,
+      name: doc.data().fullName
+    });
+  });
+  followerDetailsList.map((item, i, array) => {
+    db.collection('connections').add({
+      commonConnections: 10,
+      sender: item,
+      receiver: followingDetailsList[i],
+      connected: false,
+      status: 'Pending',
+      createdAt: moment().format(),
+      updatedAt: moment().format()
+    }).then(doc => {
+      console.log(`${doc.id} Written`);
+      if(i === array.length - 1){
+        return res.json('All Connections Created.');
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+  });
+};

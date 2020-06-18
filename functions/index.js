@@ -46,7 +46,7 @@ const {
   getUserDetailsWithAuth,
   markAllNotificationsRead,
   markOneNotificationRead,
-} = require('./handlers/users');
+} = require('./handlers/users/usersController');
 
 const {
   followUser,
@@ -58,6 +58,15 @@ const {
 } = require('./handlers/followRoutes');
 
 const {
+  addConnection,
+  getConnectionById,
+  withdrawRequest,
+  acceptRequest,
+  rejectRequest,
+  disconnect
+} = require('./handlers/connectRoutes');
+
+const {
   getAllTags,
   getAllNotifications,
   markAllNotificationsUnread,
@@ -65,7 +74,8 @@ const {
   addOneExtraUserDetail,
   addScreamTags,
   uploadImageAndDisplayScreams,
-  setContentImageForAllScreams
+  setContentImageForAllScreams,
+  createConnectionsFromFollowers
 } = require('./handlers/utilRoutes');
 
 const {
@@ -119,13 +129,13 @@ const {
 
 
 
-
 // Authentication Routes
 app.post('/signup', signup);
 app.post('/login', login);
 app.get('/revoketoken/:uid', revokeToken);
 
-// Scream routes
+
+// Scream Routes
 app.get('/allscreams', getAllScreams);
 app.get('/screams', getPaginatedScreams);
 app.get('/scream/:screamId', getScreamById);
@@ -150,25 +160,35 @@ app.post('/notifications', FBAuth, markAllNotificationsRead);
 app.get('/notification/:notificationId', FBAuth, markOneNotificationRead);
 
 
-// Follow routes
-app.post('/user/:handle/follow', FBAuth, followUser);
+// Connection Routes
+app.get('/getconnection/:connectionId', FBAuth, getConnectionById);
+app.post('/connect/:handle', FBAuth, addConnection);
+app.delete('/withdraw/:connectionId', FBAuth, withdrawRequest);
+app.put('/accept/:connectionId', FBAuth, acceptRequest);
+app.put('/reject/:connectionId', FBAuth, rejectRequest);
+app.delete('/disconnect/:connectionId', FBAuth, disconnect);
+
+
+// Follow Routes
 app.get('/findfollower/:handle', FBAuth, findFollower);
 app.get('/findfollowed/:handle', FBAuth, findFollowed);
-app.delete('/user/:followId/unfollow', FBAuth, unfollowUser);
-app.post('/user/:followId/followBack', FBAuth, followBack);
-app.post('/user/:followId/revokeFollowBack', FBAuth, revokeFollowBack);
+app.post('/follow/:handle', FBAuth, followUser);
+app.delete('/unfollow/:followId', FBAuth, unfollowUser);
+app.post('/followback/:followId', FBAuth, followBack);
+app.post('/revokefollow/:followId', FBAuth, revokeFollowBack);
 
 
 // Utils Routes
-app.get('/tags', getAllTags);
-app.get('/export-all-data', exportAllData);
-app.get('/notifications', getAllNotifications);
-app.post('/notifications/allunread', markAllNotificationsUnread);
-app.post('/addExtraUserDetails', addExtraUserDetails);
-app.post('/addOneExtraUserDetail/:handle', addOneExtraUserDetail);
-app.post('/addScreamTags', addScreamTags);
-app.post('/uploadImageAndDisplay', uploadImageAndDisplayScreams);
-app.post('/setContentImage', setContentImageForAllScreams);
+app.get('/utils/tags', getAllTags);
+app.get('/utils/export-all-data', exportAllData);
+app.get('/utils/notifications', getAllNotifications);
+app.post('/utils/notifications/allunread', markAllNotificationsUnread);
+app.post('/utils/addExtraUserDetails', addExtraUserDetails);
+app.post('/utils/addOneExtraUserDetail/:handle', addOneExtraUserDetail);
+app.post('/utils/addScreamTags', addScreamTags);
+app.post('/utils/uploadImageAndDisplay', uploadImageAndDisplayScreams);
+app.post('/utils/setContentImage', setContentImageForAllScreams);
+app.post('/utils/create-connections-from-followers', createConnectionsFromFollowers);
 
 
 // Tracks Routes
