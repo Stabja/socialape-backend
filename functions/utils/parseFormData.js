@@ -6,6 +6,7 @@ const fs = require('fs');
 const config = require('./getconfig').config;
 const { fbstorage_url } = require('../config/externalUrls');
 const { DEBUG } = require('../config/constants');
+const colors = require('colors');
 
 
 module.exports = (headers, rawBody) => {
@@ -15,12 +16,13 @@ module.exports = (headers, rawBody) => {
   let imageToBeUploaded = {};
 
   return new Promise((resolve, reject) => {
-    
+    console.log({ headers, rawBody });
     let formData = {};
     busboy.on('field', (fieldname, val) => {
       DEBUG && console.log(fieldname, ': ', val);
       formData[fieldname] = val;
     });
+
     busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
       DEBUG && console.log(fieldname, file, filename, encoding, mimetype);
       if(mimetype !== 'image/jpeg' && mimetype !== 'image/png'){
@@ -33,6 +35,7 @@ module.exports = (headers, rawBody) => {
       imageToBeUploaded = { filepath, mimetype };
       file.pipe(fs.createWriteStream(filepath));
     });
+
     busboy.on('finish', () => {
       DEBUG && console.log('formData', formData);
       DEBUG && console.log(formData['body']);

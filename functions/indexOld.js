@@ -9,7 +9,6 @@ require('dotenv').config();
 
 const app = express();
 app.use(cors());
-
 /* const cacheControl = require('express-cache-controller');
 app.use(cacheControl({
   maxAge: 31557600
@@ -230,7 +229,6 @@ app.post('/nytarticles/keywords/:word/create', createKeywords);
 
 
 exports.api = functions.region('asia-east2').https.onRequest(app);
-
 
 exports.createNotificationOnLike = createNotificationOnLike;
 exports.deleteNotificationOnUnlike = deleteNotificationOnUnlike;

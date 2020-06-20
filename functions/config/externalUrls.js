@@ -17,7 +17,7 @@ module.exports = {
   all_screams_url: serverUrl + "/allscreams",
   nytarticles_url: serverUrl + "/nytarticles",
   tracks_url: serverUrl + "/tracks",
-  screams_url: serverUrl + "/screams",
+  screams_url: serverUrl + "/scream/screams",
   comments_url: serverUrl + "/scream",
   
   fbstorage_url: "https://firebasestorage.googleapis.com",
