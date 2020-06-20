@@ -1,8 +1,8 @@
-const { db, admin } = require('../util/admin');
-const config = require('../util/getconfig').config;
-const parseFormData = require('../util/parseFormData');
-const tagsList = require('../config/tagList');
-const { fbstorage_url } = require('../config/externalUrls');
+const { db, admin } = require('../../utils/admin');
+const config = require('../../utils/getconfig').config;
+const parseFormData = require('../../utils/parseFormData');
+const tagsList = require('../../config/tagList');
+const { fbstorage_url } = require('../../config/externalUrls');
 const moment = require('moment');
 
 
@@ -24,41 +24,6 @@ exports.getAllTags = (req, res) => {
     .catch(err => {
       console.error(err);
       return res.status(500).json({ error: 'Something went wrong.' });
-    });
-};
-
-// Get all notifications
-exports.getAllNotifications = (req, res) => {
-  db.collection('notifications')
-    .get()
-    .then(snapshot => {
-      let notifications = [];
-      snapshot.forEach(doc => {
-        let notification = {};
-        notification = doc.data();
-        notification.nId = doc.id;
-        notifications.push(notification); 
-      });
-      return res.status(201).json(notifications);
-    })
-    .catch(err => {
-      console.error(err);
-      return res.status(500).json({ error: 'Something went wrong.' });
-    });
-};
-
-exports.markAllNotificationsUnread = (req, res) => {
-  db.collection('notifications')
-    .get()
-    .then(data => {
-      data.forEach(doc => {
-        doc.ref.update({ read : false });
-      });
-      return res.json({ message: 'All Notifications marked unread.' });
-    })
-    .catch(err => {
-      console.error(err);
-      return res.status(500).json({ error: err.code });
     });
 };
 

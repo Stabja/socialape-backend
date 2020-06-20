@@ -1,6 +1,6 @@
-const { admin, db } = require('../../util/admin');
-const { reduceUserDetails } = require('../../util/validators');
-const config = require('../../util/getconfig').config;
+const { admin, db } = require('../../utils/admin');
+const { reduceUserDetails } = require('../../utils/validators');
+const config = require('../../utils/getconfig').config;
 const { fbstorage_url } = require('../../config/externalUrls');
 const usersService = require('./usersService');
 
@@ -8,7 +8,6 @@ const usersService = require('./usersService');
 // Add user details
 exports.addUserDetails = (req, res) => {
   let userDetails = reduceUserDetails(req.body);
-
   db.doc(`/users/${req.user.handle}`)
     .update(userDetails)
     .then(() => {
@@ -20,8 +19,37 @@ exports.addUserDetails = (req, res) => {
     });
 };
 
-// Get own user details
-exports.getAuthenticatedUser = (req, res) => {
+
+exports.getAuthenticatedUser = async (req, res) => {
+  let user = await db.doc(`/users/${req.user.handle}`).get();
+  if(!user.exists) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+  
+  let userData = {};
+  userData.credentials = user.data();
+  let userLikes = usersService.getUserLikes(req.user.handle);
+  let userConnections = usersService.getUserConnections(req.user.handle);
+  let userNotifications = usersService.getUserNotifications(req.user.handle);
+
+  Promise.all([
+    userLikes,
+    userConnections,
+    userNotifications
+  ]).then(promises => {
+      userData.likes = promises[0];
+      userData.connections = promises[1];
+      userData.notifications = promises[2];
+      return res.json(userData);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code })
+    });
+};
+
+
+exports.getAuthenticatedUserOld = (req, res) => {
   let userData = {};
   db.doc(`/users/${req.user.handle}`).get()
     .then((doc) => {
@@ -113,7 +141,40 @@ exports.getScreamsFollowedByUser = (req, res) => {
 };
 
 
-exports.getFollowingListOfUser = (req, res) => {
+exports.getAllConnectionsOfUser = async (req, res) => {
+  let user = await db.doc(`/users/${req.params.handle}`).get();
+  if(!user.exists) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+  let connections = usersService.getUserConnections(req.params.handle);
+  connections.then(data => {
+    return res.json(data);
+  }).catch(err => {
+    console.log(err);
+    return res.status(500).json({ error: err.code });
+  });
+};
+
+
+exports.getAllFollowersOfUser = async (req, res) => {
+  db.collection('followers')
+    .where('followed', '==', req.params.handle)
+    .get()
+    .then((data) => {
+      let followList = [];
+      data.forEach(doc => {
+        followList.push(doc.data().following);
+      });
+      return res.json(followList);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+
+exports.getFollowingListOfUser = async (req, res) => {
   db.collection('followers')
     .where('follower', '==', req.params.handle)
     .get()
@@ -131,7 +192,6 @@ exports.getFollowingListOfUser = (req, res) => {
 };
 
 
-// Get profile details of an User
 exports.getProfileDetailsOfanUser = (req, res) => {
   let profileDetails = {};
   db.doc(`/users/${req.params.handle}`).get()
@@ -268,40 +328,4 @@ exports.getUserDetailsWithAuth = async (req, res) => {
 };
 
 
-exports.markOneNotificationRead = (req, res) => {
-  const docRef = db.doc(`/notifications/${req.params.notificationId}`);
-  db.doc(`/notifications/${req.params.notificationId}`).get()
-    .then(doc => {
-      if(!doc.exists){
-        return res.status(404).json({ error: 'Notification not found.' });
-      }
-      //Check whether the user logged in is the one who received the notification
-      if(req.user.handle !== doc.data().recipient){
-        return res.json({ message: 'You are not authorized to read this notification.' });
-      }
-      docRef.update({ read: true });
-      return res.status(200).json({ message: 'Notification marked read.' });
-    })
-    .catch(err => {
-      console.error(err);
-      return res.status(500).json(err.code);
-    });
-};
 
-
-exports.markAllNotificationsRead = (req, res) => {
-  let batch = db.batch();
-  req.body.forEach((notificationId) => {
-    const notification = db.doc(`/notifications/${notificationId}`);
-    batch.update(notification, { read: true });
-  });
-  batch
-    .commit()
-    .then(() => {
-      return res.json({ message: 'Notifications marked read' });
-    })
-    .catch((err) => {
-      console.error(err);
-      return res.status(500).json({ error: err.code });
-    });
-};

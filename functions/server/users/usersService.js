@@ -1,17 +1,21 @@
-const { db } = require('../../util/admin');
+const { db } = require('../../utils/admin');
 const { DEBUG } = require('../../config/constants');
-
+const { 
+  ScreamModel, 
+  LikeModel, 
+  ConnectionModel,
+  NotificationModel
+} = require('../../utils/collectionModels');
 
 
 exports.getScreamsCreatedByUser = async (userHandle) => {
   return new Promise(async (resolve, reject) => {
     DEBUG && console.log('getScreamsCreatedByUser Started');
-    let userScreams = await db.collection('screams')
+    let userScreams = await ScreamModel
       .where('userHandle', '==', userHandle)
       .orderBy('createdAt', 'desc')
       .get();
     if(!userScreams) {
-      //throw new Error('Problem with user screams.');
       reject('Problem with user screams.');
     }
     let screamsList = [];
@@ -33,9 +37,11 @@ const getScreamsByIds = async (likedIds) => {
   }
   let screamsList = [];
   screams.forEach(doc => {
-    let scream = doc.data();
-    scream.screamId = doc.id;
-    screamsList.push(scream);
+    if(doc.exists){
+      let scream = doc.data();
+      scream.id = doc.id;
+      screamsList.push(scream);
+    }
   });
   return screamsList;
 };
@@ -44,15 +50,12 @@ const getScreamsByIds = async (likedIds) => {
 exports.getScreamsLikedByUser = async (userHandle) => {
   return new Promise(async (resolve, reject) => {
     DEBUG && console.log('getScreamsLikedByUser Started');
-    const userLikes = await db.collection('likes')
-      .where('userHandle', '==', userHandle)
-      .get();
+    const userLikes = await LikeModel.where('userHandle', '==', userHandle).get();
     if(!userLikes){
-      //throw new Error('Likes not found.');
       reject('Likes not found.');
     }
     let likedIds = [];
-    userLikes.docs.map((doc, i, array) => {
+    userLikes.docs.map((doc) => {
       likedIds.push(db.doc(`/screams/${doc.data().screamId}`));
     });
     let likedScreams = getScreamsByIds(likedIds);
@@ -64,26 +67,38 @@ exports.getScreamsLikedByUser = async (userHandle) => {
 };
 
 
+exports.getUserLikes = async (userHandle) => {
+  return new Promise(async (resolve, reject) => {
+    DEBUG && console.log('getUserLikes Started');
+    const userLikes = await LikeModel.where('userHandle', '==', userHandle).get();
+    if(!userLikes){
+      reject('Likes not found.');
+    }
+    let likes = [];
+    userLikes.docs.forEach(doc => {
+      likes.push(doc.data());
+    });
+    DEBUG && console.log('getUserLikes Ended');
+    resolve(likes);
+  });
+};
+
+
 exports.getUserConnections = async (userHandle) => {
   return new Promise(async (resolve, reject) => {
     DEBUG && console.log('getUserConnections Started');
-    const userSender = await db.collection('connections')
-      .where('sender.id', '==', userHandle)
-      .get();
-    const userReceiver = await db.collection('connections')
-      .where('receiver.id', '==', userHandle)
-      .get();
-    if(!userSender || !userReceiver){
-      //throw new Error('Connections not found.');
+    const sender = await ConnectionModel.where('sender.id', '==', userHandle).get();
+    const receiver = await ConnectionModel.where('receiver.id', '==', userHandle).get();
+    if(!sender || !receiver){
       reject('Connections not found.');
     }
     let connectionsList = [];
-    userSender.forEach(doc => {
+    sender.forEach(doc => {
       let connection = doc.data();
-      connection.connectionId = doc.id;
+      connection.id = doc.id;
       connectionsList.push(connection);
     });
-    userReceiver.forEach(doc => {
+    receiver.forEach(doc => {
       let connection = doc.data();
       connection.connectionId = doc.id;
       connectionsList.push(connection);
@@ -94,16 +109,38 @@ exports.getUserConnections = async (userHandle) => {
 };
 
 
+exports.getUserNotifications = async (userHandle) => {
+  return new Promise(async (resolve, reject) => {
+    DEBUG && console.log('getUserNotifications Started');
+    const notifications = await NotificationModel
+      .where('recipient', '==', userHandle)
+      .orderBy('createdAt', 'desc')
+      .limit(10)
+      .get();
+    if(!notifications){
+      reject('Notifications not found.')
+    }
+    let notificationList = [];
+    notifications.docs.forEach(doc => {
+      let noti = doc.data();
+      noti.id = doc.id;
+      notificationList.push(noti);
+    });
+    DEBUG && console.log('getUserNotifications Ended.');
+    resolve(notificationList);
+  });
+};
+
+
 exports.findIfUserIsSender = async (userHandle, profileHandle) => {
   return new Promise(async (resolve, reject) => {
     DEBUG && console.log('findIfUserIsSender Started');
-    const isUserFollower = await db.collection('connections')
+    const isUserFollower = await ConnectionModel
       .where('sender.id', '==', userHandle)
       .where('receiver.id', '==', profileHandle)
       .limit(1)
       .get();
     if(!isUserFollower){
-      //throw new Error('Connection not found.');
       reject('Connection not found.');
     }
     DEBUG && console.log('findIfUserIsSender Ended');
@@ -115,13 +152,12 @@ exports.findIfUserIsSender = async (userHandle, profileHandle) => {
 exports.findIfUserIsReceiver = async (userHandle, profileHandle) => {
   return new Promise(async (resolve, reject) => {
     DEBUG && console.log('findIfUserIsReceiver Started');
-    const isUserFollowing = await db.collection('connections')
+    const isUserFollowing = await ConnectionModel
       .where('sender.id', '==', profileHandle)
       .where('receiver.id', '==', userHandle)
       .limit(1)
       .get();
     if(!isUserFollowing){
-      //throw new Error('Connection not found.');
       reject('Connection not found.');
     }
     DEBUG && console.log('findIfUserIsReceiver Ended');

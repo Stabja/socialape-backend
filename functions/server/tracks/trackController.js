@@ -1,4 +1,4 @@
-const { db, admin } = require('../util/admin');
+const { db, admin } = require('../../utils/admin');
 const axios = require('axios');
 const querystring = require('querystring');
 const qs = require('qs');
@@ -7,8 +7,8 @@ const moment = require('moment');
 const { 
   validateCursor,
   paginateQuery
-} = require('../util/paginationUtils');
-const { SPOTIFY_ENCODED_SECRET } = require('../config/constants');
+} = require('../../utils/paginationUtils');
+const { SPOTIFY_ENCODED_SECRET } = require('../../config/constants');
 const {
   spotify_token_url,
   spotify_artist_url,
@@ -16,7 +16,7 @@ const {
   spotify_toptracks_url,
   jb_tracks_url,
   tracks_url
-} = require('../config/externalUrls');
+} = require('../../config/externalUrls');
 
 
 // Get AccessToken using ClientId and ClientSecret (Axios Implementation)

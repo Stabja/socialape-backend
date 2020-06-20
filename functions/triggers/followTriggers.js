@@ -1,4 +1,4 @@
-const { db, admin } = require('../util/admin');
+const { db, admin } = require('../utils/admin');
 const functions = require('firebase-functions');
 const moment = require('moment');
 

@@ -1,6 +1,7 @@
-const { db } = require('../util/admin');
+const { db } = require('./admin');
 const fs = require('fs');
 const path = require('path');
+
 
 // This has to be made synchronous
 const writeJsonToFile = (outputFile, jsonContent) => {

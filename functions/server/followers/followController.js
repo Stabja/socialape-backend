@@ -1,5 +1,5 @@
-const { db } = require('../util/admin');
-const { DEBUG } = require('../config/constants');
+const { db } = require('../../utils/admin');
+const { DEBUG } = require('../../config/constants');
 const moment = require('moment');
 
 

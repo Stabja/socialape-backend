@@ -1,11 +1,8 @@
-const { admin, db } = require('../util/admin');
+const { admin, db } = require('../../utils/admin');
 //const jwt = require('jsonwebtoken');
 
-const config = require('../util/getconfig').config;
-const firebase = require('../util/getconfig').firebase;
-
-
-const { validateSignupData, validateLoginData } = require('../util/validators');
+const { config, firebase } = require('../../utils/getconfig');
+const { validateSignupData, validateLoginData } = require('../../utils/validators');
 
 
 // User Registration

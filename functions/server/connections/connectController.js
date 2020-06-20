@@ -1,55 +1,18 @@
-const { db } = require('../util/admin');
-const { DEBUG } = require('../config/constants');
+const { db } = require('../../utils/admin');
+const { DEBUG } = require('../../config/constants');
 const moment = require('moment');
 
+const {
+  fetchUserAvatar,
+  doesUserExist,
+  doesConnectionExists,
+  connectionAlreadyExists
+} = require('./connectUtils');
 
-const fetchUserAvatar = async (handle) => {
-  let doc = await db.doc(`/users/${handle}`).get();
-  if(!doc.exists) {
-    throw new Error(`Can't fetch userinfo.`);
-  }
-  let userInfo = {};
-  userInfo.id = doc.id;
-  userInfo.avatar = doc.data().imageUrl;
-  userInfo.name = doc.data().fullName;
-  return userInfo;
-};
-
-const doesUserExist = async (handle) => {
-  const doc = await db.doc(`/users/${handle}`).get();
-  if(!doc.exists){
-    return false;
-  }
-  return true;
-};
-
-const doesConnectionExists = async (connectionId) => {
-  let doc = await db.doc(`/connections/${connectionId}`).get();
-  if(!doc.exists){
-    return false;
-  }
-  return true;
-};
-
-const connectionAlreadyExists = async (sender, receiver) => {
-  const forwardQuery = db.collection('connections')
-    .where('sender.id', '==', sender)
-    .where('receiver.id', '==', receiver);
-  const reverseQuery = db.collection('connections')
-    .where('sender.id', '==', receiver)
-    .where('receiver.id', '==', sender);
-  
-  let promises = await Promise.all([forwardQuery.get(), reverseQuery.get()]);
-  if(promises[0].docs.length > 0 || promises[1].docs.length > 0){
-    DEBUG && console.log('Document already exists');
-    return true;
-  }
-  return false;
-};
 
 
 exports.getConnectionById = async (req, res) => {
-  let doc = await db.doc(`/connections/${req.params.connectionId}`).get();
+  let doc = await db.doc(`/connections/${req.params.id}`).get();
   if(!doc.exists) {
     return res.status(500).json({ error: 'Invalid ConnectionId' });
   }
@@ -90,10 +53,10 @@ exports.addConnection = async (req, res) => {
 
 
 exports.withdrawRequest = async (req, res) => {
-  if(await doesConnectionExists(req.params.connectionId) === false){
+  if(await doesConnectionExists(req.params.id) === false){
     return res.status(404).json({ error: 'Connection doesn\'t exist.' });
   }
-  db.doc(`/connections/${req.params.connectionId}`)
+  db.doc(`/connections/${req.params.id}`)
     .delete()
     .then(() => {
       return res.json({ message: 'Request Withdrawn Successfully.' });
@@ -106,10 +69,10 @@ exports.withdrawRequest = async (req, res) => {
 
 
 exports.acceptRequest = async (req, res) => {
-  if(await doesConnectionExists(req.params.connectionId) === false){
+  if(await doesConnectionExists(req.params.id) === false){
     return res.status(404).json({ error: 'Connection doesn\'t exist.' });
   }
-  db.doc(`/connections/${req.params.connectionId}`)
+  db.doc(`/connections/${req.params.id}`)
     .update({
       connected: true,
       status: 'Connected',
@@ -126,10 +89,10 @@ exports.acceptRequest = async (req, res) => {
 
 
 exports.rejectRequest = async (req, res) => {
-  if(await doesConnectionExists(req.params.connectionId) === false){
+  if(await doesConnectionExists(req.params.id) === false){
     return res.status(404).json({ error: 'Connection doesn\'t exist.' });
   }
-  db.doc(`/connections/${req.params.connectionId}`)
+  db.doc(`/connections/${req.params.id}`)
     .update({
       connected: false,
       status: 'Rejected',
@@ -146,10 +109,10 @@ exports.rejectRequest = async (req, res) => {
 
 
 exports.disconnect = async (req, res) => {
-  if(await doesConnectionExists(req.params.connectionId) === false){
+  if(await doesConnectionExists(req.params.id) === false){
     return res.status(404).json({ error: 'Connection doesn\'t exist.' });
   }
-  db.doc(`/connections/${req.params.connectionId}`)
+  db.doc(`/connections/${req.params.id}`)
     .delete()
     .then(() => {
       return res.json({ message: 'Users Disconnected Successfully.' });

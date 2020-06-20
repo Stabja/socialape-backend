@@ -26,7 +26,6 @@ module.exports = (req, res, next) => {
       });
 
   } else {
-    //return res.status(403).json({ error: 'Unauthorized' });
     let userData = {};
     db.doc(`/users/${req.params.handle}`).get()
       .then((doc) => {
