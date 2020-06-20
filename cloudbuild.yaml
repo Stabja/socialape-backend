@@ -3,11 +3,6 @@ steps:
 - name: 'gcr.io/$PROJECT_ID/firebase'
   args: ['use', 'socialape-d8699']
 
-#- name: node:14.1.0
-#  dir: 'functions'
-#  entrypoint: npm
-#  args: ['install']
-
 - name: 'gcr.io/cloud-builders/npm:node-10.10.0'
   dir: 'functions'
   args: ['install']

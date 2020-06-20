@@ -13,10 +13,11 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const swaggerUI = require('swagger-ui-express');
 const swagger = require('./swagger/swagger');
+const colors = require('colors');
 require('dotenv').config();
 
 
-console.log('Environment: ', process.env.NODE_ENV);
+console.log(`Environment: ${ process.env.NODE_ENV }`.green);
 
 
 const app = express();

@@ -151,7 +151,7 @@ exports.fetchArticlesUsingPagination = async (req, res) => {
     if(startingDoc) {
       firebaseQuery = db.collection('nytarticles')
         .orderBy('pub_date', 'desc')
-        .select('pub_date')
+        //.select('pub_date')
         .startAfter(startingDoc)
         .limit(pageSize);
     } else {
@@ -160,7 +160,7 @@ exports.fetchArticlesUsingPagination = async (req, res) => {
   } else {
     firebaseQuery = db.collection('nytarticles')
       .orderBy('pub_date', 'desc')
-      .select('pub_date')
+      //.select('pub_date')
       .limit(pageSize);
   }
 

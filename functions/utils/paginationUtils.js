@@ -1,4 +1,4 @@
-const { db, admin } = require('./admin');
+const { db } = require('./admin');
 const querystring = require('querystring');
 
 

@@ -1,6 +1,16 @@
+require('dotenv').config();
+const colors = require('colors');
+
+
 let serverUrl = process.env.NODE_ENV === 'development'
   ? 'http://localhost:5000/socialape-d8699/asia-east2/api'
-  : 'https://asia-east2-socialape-d8699.cloudfunctions.net/api'
+  : 'https://asia-east2-socialape-d8699.cloudfunctions.net/api';
+
+
+console.log(colors.yellow({
+  constantEnv: process.env.NODE_ENV,
+  serverUrl
+}));
 
 
 module.exports = {

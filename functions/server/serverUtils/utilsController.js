@@ -8,24 +8,21 @@ const moment = require('moment');
 
 
 // Get all tags
-exports.getAllTags = (req, res) => {
-  db.collection('tags')
-    .get()
-    .then(snapshot => {
-      let tagsList = [];
-      snapshot.forEach(doc => {
-        tagsList.push(doc.id);
-      });
-      let tags = {
-        tags: tagsList
-      };
-      return res.status(201).json(tags);
-    })
-    .catch(err => {
-      console.error(err);
-      return res.status(500).json({ error: 'Something went wrong.' });
-    });
+exports.getAllTags = async (req, res) => {
+  let tags = await db.collection('tags').get();
+  if(!tags){
+    return res.status(500).json({ error: 'Something went wrong.' });
+  }
+  let tagsList = [];
+  tags.forEach(doc => {
+    tagsList.push(doc.id);
+  });
+  let tagsObj = {
+    tags: tagsList
+  };
+  return res.json(tagsObj);
 };
+
 
 exports.addExtraUserDetails = (req, res) => {
   const extraUserDetails = req.body;
@@ -43,6 +40,7 @@ exports.addExtraUserDetails = (req, res) => {
     });
 };
 
+
 exports.addOneExtraUserDetail = (req, res) => {
   const extraUserDetails = req.body;
   db.doc(`/users/${req.params.handle}`).get()
@@ -58,6 +56,7 @@ exports.addOneExtraUserDetail = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
 
 exports.addScreamTags = (req, res) => {
   db.collection('screams')
