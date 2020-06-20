@@ -1,7 +1,7 @@
 steps:
 
 - name: 'gcr.io/$PROJECT_ID/firebase'
-  args: ['use', 'hipster-prod']
+  args: ['use', 'conduit-backend']
 
 #- name: node:14.1.0
 #  dir: 'functions'
