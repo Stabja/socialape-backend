@@ -9,6 +9,7 @@ const {
   screams_url,
   comments_url
 } = require('../../config/externalUrls');
+const colors = require('colors');
 
 
 
@@ -177,7 +178,7 @@ exports.postOneScream = async (req, res) => {
     req.headers,
     req.rawBody
   );
-  console.log(parsedFormData);
+  console.log(colors.cyan({ parsedFormData }));
 
   if(parsedFormData.error){
     console.log('Wrong file type submitted');
@@ -224,7 +225,7 @@ exports.postOneScream = async (req, res) => {
   db.collection('screams')
     .add(newScream)
     .then((doc) => {
-      console.log(newScream);
+      console.log(colors.green(newScream));
       const resScream = newScream;
       resScream.screamId = doc.id;
       return res.json(resScream);

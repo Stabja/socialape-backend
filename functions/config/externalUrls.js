@@ -7,7 +7,7 @@ let serverUrl = process.env.NODE_ENV === 'development'
   : 'https://asia-east2-socialape-d8699.cloudfunctions.net/api';
 
 
-console.log(colors.yellow({
+console.log(colors.blue({
   constantEnv: process.env.NODE_ENV,
   serverUrl
 }));

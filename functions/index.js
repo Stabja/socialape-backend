@@ -17,7 +17,7 @@ const colors = require('colors');
 require('dotenv').config();
 
 
-console.log(`Environment: ${ process.env.NODE_ENV }`.green);
+console.log(`Environment: ${ process.env.NODE_ENV }`.cyan);
 
 
 const app = express();
