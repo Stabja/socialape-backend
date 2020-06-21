@@ -6,7 +6,7 @@ const { validateSignupData, validateLoginData } = require('../../utils/validator
 
 
 // User Registration
-exports.signup = (req, res) => {
+exports.signup = async (req, res) => {
   const newUser = {
     email: req.body.email,
     password: req.body.password,
@@ -21,77 +21,81 @@ exports.signup = (req, res) => {
   const noImg = 'no-img.png';
 
   // TODO: validate data (STORE THE NEW USER IN A COLLECTION)
-  let token, userId;
-  db.doc(`/users/${newUser.handle}`).get()
-    .then(doc => {
-      if(doc.exists){
-        return res.status(400).json({ handle: 'this user handle is already taken' });
-      } else {
-        return firebase
-          .auth()
-          .createUserWithEmailAndPassword(newUser.email, newUser.password);
-      }
-    })
-    .then((data) => {
-      userId = data.user.uid;
-      return data.user.getIdToken();
-    })
-    .then((idToken) => {
-      token = idToken;
-      const userCredentials = {
-        handle: newUser.handle,
-        email: newUser.email,
-        createdAt: new Date().toISOString(),
-        imageUrl: `https://firebasestorage.googleapis.com/v0/b/${
-          config.storageBucket
-        }/o/${noImg}?alt=media`,
-        userId
-      };
-      return db.doc(`/users/${newUser.handle}`).set(userCredentials);
-    })
-    .then(() => {
-      return res.status(201).json(
-        {
-          userId,
-          token
-        }
-      );
-    })
-    .catch(err => {
-      console.error(err);
-      if(err.code === 'auth/email-already-in-use'){
-        return res.status(400).json({ email: 'Email is already in use' });
-      } else {
-        return res.status(500).json({ general: 'Something went wrong, please try again' });
-      }
+  let userDoc = await db.doc(`/users/${newUser.handle}`).get();
+  if(userDoc.exists){
+    return res.status(400).json({ handle: 'this user handle is already taken' });
+  }
+
+  let signupData = await firebase
+    .auth()
+    .createUserWithEmailAndPassword(newUser.email, newUser.password);
+
+  if(!signupData){
+    return res.status(500).json({ error: 'A problem has occured while registering user.' });
+  }  
+  let userId = signupData.user.uid;
+
+  let token = signupData.user.getIdToken();
+  if(!token){
+    return res.status(500).json({ error: 'Error retrieving token.' })
+  }
+
+  const userCredentials = {
+    handle: newUser.handle,
+    email: newUser.email,
+    createdAt: new Date().toISOString(),
+    imageUrl: `https://firebasestorage.googleapis.com/v0/b/${
+      config.storageBucket
+    }/o/${noImg}?alt=media`,
+    userId
+  };
+
+  const newUserDoc = await db.doc(`/users/${newUser.handle}`).set(userCredentials);
+  if(!newUserDoc){
+    console.error(err);
+    if(err.code === 'auth/email-already-in-use'){
+      return res.status(400).json({ email: 'Email is already in use' });
+    } else {
+      return res.status(500).json({ general: 'Something went wrong, please try again' });
+    }
+  }
+  return res
+    .status(201)
+    .json({
+      userId,
+      token
     });
 };
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
   const user = {
     email: req.body.email,
     password: req.body.password
   };
 
   const { errors, valid } = validateLoginData(user);
+  if(!valid){
+    return res.status(400).json(errors);
+  }
 
-  if(!valid) return res.status(400).json(errors);
+  let loginData;
+  try {
+    loginData = await firebase
+      .auth()
+      .signInWithEmailAndPassword(user.email, user.password)
+  } catch{
+    return res
+      .status(403)
+      .json({ general: 'Wrong credentials, please try again' });
+  };
 
-  firebase
-    .auth()
-    .signInWithEmailAndPassword(user.email, user.password)
-    .then(data => {
-      return data.user.getIdToken();
-    })
-    .then(token => {
-      return res.json({token});
-    })
-    .catch(err => {
-      console.error(err);
-      return res
-        .status(403)
-        .json({ general: 'Wrong credentials, please try again' });
-    });
+  console.log(loginData);
+
+  let token = await loginData.user.getIdToken();
+  if(!token){
+    return res.status(500).json({ error: 'Error retrieving token.' })
+  }
+  return res.json({ token });
 };
 
 
