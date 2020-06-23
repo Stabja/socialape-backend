@@ -3,6 +3,7 @@ const config = require('../../utils/getconfig').config;
 const parseFormData = require('../../utils/parseFormData');
 const tagsList = require('../../config/tagList');
 const { fbstorage_url } = require('../../config/externalUrls');
+const imageUtils = require('../../utils/imageUtils');
 const moment = require('moment');
 
 
@@ -106,60 +107,22 @@ exports.uploadImageAndDisplayScreams = (req, res) => {
 };
 
 
-exports.setContentImageForAllScreams = (req, res) => {
-  const BusBoy = require('busboy');
-  const path = require('path');
-  const os = require('os');
-  const fs = require('fs');
-
-  const busboy = new BusBoy({ headers: req.headers });
-
-  let imageFileName;
-  let imageToBeUploaded = {};
-
-  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-    console.log(fieldname, file, filename, encoding, mimetype);
-    if(mimetype !== 'image/jpeg' && mimetype !== 'image/png'){
-      return res.status(400).json({ error: 'Wrong file type submitted' });
-    }
-    const imageExtension = filename.split('.')[filename.split('.').length - 1];
-    imageFileName = `${Math.round(Math.random() * 100000000000)}.${imageExtension}`;
-    const filepath = path.join(os.tmpdir(), imageFileName);
-    imageToBeUploaded = { filepath, mimetype };
-    file.pipe(fs.createWriteStream(filepath));
-  });
-
-  busboy.on('finish', () => {
-    let imageUrl = null;
-    admin
-      .storage()
-      .bucket()
-      .upload(imageToBeUploaded.filepath, {
-        resumable: false,
-        metadata: {
-          metadata: {
-            contentType: imageToBeUploaded.mimetype
-          }
-        }
-      })
-    .then(() => {
-      imageUrl = `${fbstorage_url}/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
-      console.log(imageUrl);
-      return db.collection('screams').get();
-    })
-    .then((snapshot) => {
-      snapshot.forEach(doc => {
-        doc.ref.update({ contentImage: imageUrl });
-      })
-      return res.json({ message: 'contentImage Updated Successfully.' });
-    })
-    .catch(err => {
-      console.error(err);
-      return res.status(500).json({ error: err.code });
-    });
-  });
-
-  busboy.end(req.rawBody);
+exports.setContentImageForAllScreams = async (req, res) => {
+  let bucketName = 'profileImages';
+  let uploadStatus;
+  try {
+    uploadStatus = await imageUtils.changeProfileImage(
+      req.headers, 
+      req.rawBody, 
+      req.user.handle,
+      bucketName
+    );
+  } catch(err) {
+    DEBUG && console.log(`${err}`.red);
+    return res.status(404).json({ error: 'User not found' });
+  }
+  DEBUG && console.log(`Image Uploaded to ${bucketName}`.green);
+  return res.json(uploadStatus.message);
 };
 
 
@@ -210,4 +173,21 @@ exports.createConnectionsFromFollowers = async (req, res) => {
       console.log(err);
     });
   });
+};
+
+
+exports.addFullNameToScreams = async (req, res) => {
+  let screams;
+  try {
+    screams = await db.collection('screams').get();
+  } catch(err) {
+    return res.status(500).json({ error: 'Cannot Fetch Screams.' });
+  }
+
+  screams.forEach(async (doc) => {
+    let userDoc = await db.doc(`/users/${doc.data().userHandle}`).get();
+    doc.ref.update({ userName: userDoc.data().fullName })
+  });
+
+  return res.json({ message: 'Field added to all screams.' });
 };

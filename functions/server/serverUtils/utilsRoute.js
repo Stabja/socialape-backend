@@ -22,5 +22,7 @@ router.put('/setContentImage', utilsController.setContentImageForAllScreams);
 
 router.post('/create-connections-from-followers', utilsController.createConnectionsFromFollowers);
 
+router.post('/addFullnameToScreams', utilsController.addFullNameToScreams);
+
 
 module.exports = router;

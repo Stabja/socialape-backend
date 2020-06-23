@@ -3,7 +3,7 @@ const { DEBUG } = require('../config/constants');
 
 module.exports = {
 
-  isUserAuthorized: (req, res, next) => {
+  isUserAuthorized: async (req, res, next) => {
     let idToken;
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer ')){
       idToken = req.headers.authorization.split('Bearer ')[1];
@@ -12,25 +12,28 @@ module.exports = {
       return res.status(403).json({ error: 'Unauthorized' });
     }
     
-    admin.auth().verifyIdToken(idToken)
-      .then(decodedToken => {
-        req.user = decodedToken;
-        //DEBUG && console.log('decodedToken', decodedToken);
-        return db
-          .collection('users')
-          .where('userId', '==', req.user.uid)
-          .limit(1)
-          .get();
-      })
-      .then(data => {
-        req.user.handle = data.docs[0].data().handle;
-        req.user.imageUrl = data.docs[0].data().imageUrl;
-        return next();
-      })
-      .catch(err => {
-        DEBUG && console.error('Error while verifying token.');
-        return res.status(403).json(err);
-      });
+    let decodedToken;
+    try {
+      decodedToken = await admin.auth().verifyIdToken(idToken);
+    } catch(err) {
+      DEBUG && console.error(`${err}`.red);
+      return res.status(403).json(err);
+    }
+    req.user = decodedToken;
+
+    let userData = await db
+      .collection('users')
+      .where('userId', '==', req.user.uid)
+      .limit(1)
+      .get();
+
+    if(userData.empty){
+      return res.status(404).json({ error: 'User not found.'});
+    }
+    req.user.handle = userData.docs[0].data().handle;
+    req.user.imageUrl = userData.docs[0].data().imageUrl;
+    req.user.fullName = userData.docs[0].data().fullName;
+    return next();
   },
 
   isProfileAuthorized: (req, res, next) => {
@@ -74,14 +77,7 @@ module.exports = {
           userData.screams = [];
           data.forEach(doc => {
             userData.screams.push({
-              contentImage: doc.data().contentImage,
-              tagList: doc.data().tagList,
-              body: doc.data().body,
-              createdAt: doc.data().createdAt,
-              userHandle: doc.data().userHandle,
-              userImage: doc.data().userImage,
-              likeCount: doc.data().likeCount,
-              commentCount: doc.data().commentCount,
+              ...doc.data(),
               screamId: doc.id
             })
           });

@@ -1,8 +1,8 @@
 const { admin, db } = require('../../utils/admin');
 //const jwt = require('jsonwebtoken');
-
 const { config, firebase } = require('../../utils/getconfig');
 const { validateSignupData, validateLoginData } = require('../../utils/validators');
+const colors = require('colors');
 
 
 // User Registration
@@ -26,15 +26,17 @@ exports.signup = async (req, res) => {
     return res.status(400).json({ handle: 'this user handle is already taken' });
   }
 
-  let signupData = await firebase
-    .auth()
-    .createUserWithEmailAndPassword(newUser.email, newUser.password);
-
-  if(!signupData){
-    return res.status(500).json({ error: 'A problem has occured while registering user.' });
-  }  
+  let signupData;
+  try {
+    signupData = await firebase
+      .auth()
+      .createUserWithEmailAndPassword(newUser.email, newUser.password);
+  } catch(err) {
+    console.error(colors.red(err.code));
+    return res.status(400).json({ email: 'Email is already in use' });
+  }
+  
   let userId = signupData.user.uid;
-
   let token = signupData.user.getIdToken();
   if(!token){
     return res.status(500).json({ error: 'Error retrieving token.' })
@@ -52,19 +54,9 @@ exports.signup = async (req, res) => {
 
   const newUserDoc = await db.doc(`/users/${newUser.handle}`).set(userCredentials);
   if(!newUserDoc){
-    console.error(err);
-    if(err.code === 'auth/email-already-in-use'){
-      return res.status(400).json({ email: 'Email is already in use' });
-    } else {
-      return res.status(500).json({ general: 'Something went wrong, please try again' });
-    }
+    return res.status(500).json({ general: 'Something went wrong, please try again' });
   }
-  return res
-    .status(201)
-    .json({
-      userId,
-      token
-    });
+  return res.status(201).json({ userId, token });
 };
 
 exports.login = async (req, res) => {
@@ -83,13 +75,11 @@ exports.login = async (req, res) => {
     loginData = await firebase
       .auth()
       .signInWithEmailAndPassword(user.email, user.password)
-  } catch{
-    return res
-      .status(403)
-      .json({ general: 'Wrong credentials, please try again' });
+  } catch {
+    return res.status(403).json({ general: 'Wrong credentials, please try again' });
   };
 
-  console.log(loginData);
+  console.log(colors.green({ loginData }));
 
   let token = await loginData.user.getIdToken();
   if(!token){

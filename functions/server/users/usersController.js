@@ -1,8 +1,9 @@
-const { admin, db } = require('../../utils/admin');
+const { db } = require('../../utils/admin');
 const { reduceUserDetails } = require('../../utils/validators');
-const config = require('../../utils/getconfig').config;
-const { fbstorage_url } = require('../../config/externalUrls');
 const usersService = require('./usersService');
+const imageUtils = require('../../utils/imageUtils');
+const { DEBUG } = require('../../config/constants');
+const { red } = require('colors');
 
 
 // Add user details
@@ -14,7 +15,7 @@ exports.addUserDetails = (req, res) => {
       return res.json({ message: 'Details added successfully' });
     })
     .catch((err) => {
-      console.error(err);
+      DEBUG && console.error(`${err}`.red);
       return res.status(500).json({ error: err.code })
     });
 };
@@ -28,10 +29,12 @@ exports.getAuthenticatedUser = async (req, res) => {
   
   let userData = {};
   userData.credentials = user.data();
+  
   let userLikes = usersService.getUserLikes(req.user.handle);
   let userConnections = usersService.getUserConnections(req.user.handle);
   let userNotifications = usersService.getUserNotifications(req.user.handle);
-
+  
+  console.time('authUser'.cyan);
   Promise.all([
     userLikes,
     userConnections,
@@ -40,10 +43,11 @@ exports.getAuthenticatedUser = async (req, res) => {
       userData.likes = promises[0];
       userData.connections = promises[1];
       userData.notifications = promises[2];
+      console.timeEnd('authUser'.cyan);
       return res.json(userData);
     })
     .catch(err => {
-      console.error(err);
+      DEBUG && console.error(`${err}`,red);
       return res.status(500).json({ error: err.code })
     });
 };
@@ -104,7 +108,7 @@ exports.getAuthenticatedUserOld = (req, res) => {
       return res.json(userData);
     })
     .catch((err) => {
-      console.error(err);
+      DEBUG && console.error(`${err}`.red);
       return res.status(500).json({ error: err.code });
     });
 };
@@ -135,22 +139,25 @@ exports.getScreamsFollowedByUser = (req, res) => {
       return res.json(usersFeed);
     })
     .catch((err) => {
-      console.error(err);
+      DEBUG && console.error(`${err}`.red);
       return res.status(500).json({ error: err.code });
     });
 };
 
 
 exports.getAllConnectionsOfUser = async (req, res) => {
-  let user = await db.doc(`/users/${req.params.handle}`).get();
-  if(!user.exists) {
+  try {
+    let user = await db.doc(`/users/${req.params.handle}`).get();
+  } catch(err) {
+    DEBUG && console.error(`${err}`.red);
     return res.status(404).json({ error: 'User not found' });
   }
+
   let connections = usersService.getUserConnections(req.params.handle);
   connections.then(data => {
     return res.json(data);
   }).catch(err => {
-    console.log(err);
+    DEBUG && console.log(`${err}`.red);
     return res.status(500).json({ error: err.code });
   });
 };
@@ -168,7 +175,7 @@ exports.getAllFollowersOfUser = async (req, res) => {
       return res.json(followList);
     })
     .catch((err) => {
-      console.error(err);
+      DEBUG && console.error(`${err}`.red);
       return res.status(500).json({ error: err.code });
     });
 };
@@ -186,7 +193,7 @@ exports.getFollowingListOfUser = async (req, res) => {
       return res.json(followList);
     })
     .catch((err) => {
-      console.error(err);
+      DEBUG && console.error(`${err}`.red);
       return res.status(500).json({ error: err.code });
     });
 };
@@ -217,81 +224,51 @@ exports.getProfileDetailsOfanUser = (req, res) => {
       return res.json(profileDetails);
     })
     .catch(err => {
-      console.log(err);
+      DEBUG && console.log(`${err}`.red);
       res.status(500).json({ error: err.code });
     });
 };
 
 // Upload a profile image for user
-exports.uploadImage = (req, res) => {
-  const BusBoy = require('busboy');
-  const path = require('path');
-  const os = require('os');
-  const fs = require('fs');
-
-  const busboy = new BusBoy({ headers: req.headers });
-
-  let imageFileName;
-  let imageToBeUploaded = {};
-
-  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-    console.log(fieldname, file, filename, encoding, mimetype);
-    if(mimetype !== 'image/jpeg' && mimetype !== 'image/png'){
-      return res.status(400).json({ error: 'Wrong file type submitted' });
-    }
-    // my.image.png => ['my', 'image', 'png']
-    // const arr = filename.split('.');
-    // const imageExtension = arr[arr.length - 1];
-    const imageExtension = filename.split('.')[filename.split('.').length - 1];
-    // 32756238461724837.png
-    imageFileName = `${Math.round(Math.random() * 100000000000)}.${imageExtension}`;
-    const filepath = path.join(os.tmpdir(), imageFileName);
-    imageToBeUploaded = { filepath, mimetype };
-    file.pipe(fs.createWriteStream(filepath));
-  });
-
-  busboy.on('finish', () => {
-    admin
-      .storage()
-      .bucket()
-      .upload(imageToBeUploaded.filepath, {
-        resumable: false,
-        metadata: {
-          metadata: {
-            contentType: imageToBeUploaded.mimetype
-          }
-        }
-      })
-    .then(() => {
-      const imageUrl = `${fbstorage_url}/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
-      return db.doc(`/users/${req.user.handle}`).update({ imageUrl });
-    })
-    .then(() => {
-      return res.json({ message: 'Image Uploaded Successfully' });
-    })
-    .catch(err => {
-      console.error(err);
-      return res.status(500).json({ error: err.code });
-    });
-  });
-  busboy.end(req.rawBody);
+exports.uploadImage = async (req, res) => {
+  let bucketName = 'profileImages';
+  let uploadStatus;
+  try {
+    uploadStatus = await imageUtils.changeProfileImage(
+      req.headers, 
+      req.rawBody, 
+      req.user.handle,
+      bucketName
+    );
+  } catch(err) {
+    DEBUG && console.log(`${err}`.red);
+    return res.status(404).json({ error: 'User not found' });
+  }
+  DEBUG && console.log(`Image Uploaded to ${bucketName}`.green);
+  return res.json(uploadStatus.message);
 };
 
 
 exports.getUserDetailsWithAuth = async (req, res) => {
-  let user = await db.doc(`/users/${req.params.handle}`).get();
-  if(!user.exists) {
+  let user;
+  try {
+    user = await db.doc(`/users/${req.params.handle}`).get();
+  } catch(err) {
+    DEBUG && console.log(`${err}`.red);
     return res.status(404).json({ error: 'User not found' });
   }
+
   let userData = {};
 
   userData.user = user.data();
+  
   let screamsList = usersService.getScreamsCreatedByUser(req.params.handle);
   let likedScreams = usersService.getScreamsLikedByUser(req.params.handle);
   let connectionsList = usersService.getUserConnections(req.params.handle);
   let isUserFollower = usersService.findIfUserIsSender(req.user.handle, req.params.handle);
   let isUserFollowing = usersService.findIfUserIsReceiver(req.user.handle, req.params.handle);
-
+  
+  DEBUG && console.time('FetchProfile'.blue);
   Promise.all([
     screamsList,
     likedScreams,
@@ -319,13 +296,11 @@ exports.getUserDetailsWithAuth = async (req, res) => {
       } else {
         userData.connection = null;
       }
+      DEBUG && console.timeEnd('FetchProfile'.blue);
       return res.json(userData);
     })
     .catch(err => {
-      console.error(err);
+      DEBUG && console.error(err);
       return res.status(500).json({ error: err.code })
     });
 };
-
-
-

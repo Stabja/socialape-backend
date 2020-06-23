@@ -10,6 +10,7 @@ const {
   comments_url
 } = require('../../config/externalUrls');
 const colors = require('colors');
+const { DEBUG } = require('../../config/constants');
 
 
 
@@ -118,28 +119,30 @@ exports.getScreamByTag = async (req, res) => {
 };
 
 
-exports.getOneScream = (req, res) => {
-  let screamRef = db.collection('screams').doc(req.params.screamId);
-  screamRef.get()
-    .then(doc => {
-      if (!doc.exists) {
-        console.log('No such document!');
-        return res.send('Document not found!');
-      } else {
-        console.log('Document data:', doc.data());
-        return res.status(201).json(doc.data());
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      return res.status(500).json({ error: 'Something went wrong' });
-    });
+exports.getOneScream = async (req, res) => {
+  let screamDoc;
+  try {
+    screamDoc = await db.doc(`/scream/${req.params.screamId}`).get();
+  } catch(err) {
+    DEBUG && console.log(`${err}`.red);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+  if(!screamDoc.exists) {
+    DEBUG && console.log('Document data:', doc.data());
+    return res.status(404).json({ error: 'Document not found!'});
+  }
+  return res.status(201).json(screamDoc.data());
 };
 
 
-exports.commentOnScream = (req, res) => {
+exports.commentOnScream = async (req, res) => {
   if(req.body.body.trim() === '') {
     return res.status(400).json({ comment: 'Must not be empty' });
+  }
+
+  let screamDoc = await db.doc(`/screams/${req.params.screamId}`).get();
+  if(!screamDoc.exists){
+    return res.status(404).json({ error: 'Scream not found' });
   }
 
   const newComment = {
@@ -150,40 +153,29 @@ exports.commentOnScream = (req, res) => {
     imageUrl: req.user.imageUrl
   };
 
-  db.doc(`/screams/${req.params.screamId}`).get()
-    .then(doc => {
-      if(!doc.exists){
-        return res.status(404).json({ error: 'Scream not found' });
-      }
-      return doc.ref.update({ commentCount: doc.data().commentCount + 1 });
-    })
-    .then(() => {
-      return db.collection('comments').add(newComment);
-    })
-    .then(() => {
-      console.log(newComment);
-      return res.json(newComment);
-    })
-    .catch(err => {
-      console.log(err);
-      return res.status(500).json({ error: 'Something went wrong' });
-    });
+  try {
+    await db.collection('comments').add(newComment);
+  } catch(err) {
+    DEBUG && console.log(`${err}`.red);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+
+  await screamDoc.ref.update({ commentCount: doc.data().commentCount + 1 });
+  DEBUG && console.log(colors.green(newComment));
+  return res.json(newComment);
 };
 
 
 // Tricky function. Involves parsing FormData using Busboy
 exports.postOneScream = async (req, res) => {
   // First upload the image and get the path, then post the Scream object
-  const parsedFormData = await parseFormData(
-    req.headers,
-    req.rawBody
-  );
-  console.log(colors.cyan({ parsedFormData }));
-
-  if(parsedFormData.error){
-    console.log('Wrong file type submitted');
-    return res.status(400).json({ error: parsedFormData.error });
+  let parsedFormData;
+  try {
+    parsedFormData = await parseFormData(req.headers, req.rawBody);
+  } catch(err) {
+    return res.status(400).json(err);
   }
+  DEBUG && console.log(colors.cyan({ parsedFormData }));
 
   if(parsedFormData.body.trim() === '') {
     return res.status(400).json({ body: 'Body must not be empty' });
@@ -195,6 +187,7 @@ exports.postOneScream = async (req, res) => {
   const newScream = {
     body: parsedFormData.body,
     userHandle: req.user.handle,
+    userName: req.user.fullName,
     userImage: req.user.imageUrl,
     contentImage: parsedFormData.contentImage,
     tagList: tagsList,
@@ -204,36 +197,30 @@ exports.postOneScream = async (req, res) => {
   };
 
   // Add the new tags in 'tags' collection
-  db.collection('tags').get()
-    .then((snapshot) => {
-      let fetchedTagList = [];
-      snapshot.forEach(doc => {
-        fetchedTagList.push(doc.id);
-      })
-      tagsList.forEach(tag => {
-        if(!fetchedTagList.includes(tag)){
-          db.collection('tags').doc(tag).set({});
-        }
-      });
-    })
-    .catch((err) => {
-      console.error(err);
-      console.log('Could not add Tags.');
-    });
+  let tags = await db.collection('tags').get();
+  if(!tags){
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+  let fetchedTagList = [];
+  tags.forEach(doc => {
+    fetchedTagList.push(doc.id);
+  });
+  tagsList.forEach(tag => {
+    if(!fetchedTagList.includes(tag)){
+      db.collection('tags').doc(tag).set({});
+    }
+  });
 
   // Add the new Scream in 'screams' collection 
-  db.collection('screams')
-    .add(newScream)
-    .then((doc) => {
-      console.log(colors.green(newScream));
-      const resScream = newScream;
-      resScream.screamId = doc.id;
-      return res.json(resScream);
-    })
-    .catch((err) => {
-      console.error(err);
-      return res.status(500).json({ error: 'Something went wrong' });
-    });
+  let newScreamDoc = await db.collection('screams').add(newScream);
+  if(!newScreamDoc){
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+  DEBUG && console.log(colors.green(newScreamDoc));
+  const resScream = newScreamDoc;
+  resScream.screamId = newScreamDoc.id;
+
+  return res.json(resScream);
 };
 
 
@@ -300,7 +287,7 @@ exports.unlikeScream = async (req, res) => {
  
   let deleteLike = await db.doc(`/likes/${likeDoc.docs[0].id}`).delete();
   if(!deleteLike) {
-    console.log('Delete doesn\'t return Document');
+    DEBUG && console.log('Delete doesn\'t return Document');
     //return res.status(500).json({ error: err.code });
   }
   screamData.likeCount--;

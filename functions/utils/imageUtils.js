@@ -1,16 +1,27 @@
-const { admin } = require('./admin');
+const { db, admin } = require('./admin');
 const BusBoy = require('busboy');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
-const config = require('./getconfig').config;
+const { config } = require('./getconfig');
 const { fbstorage_url } = require('../config/externalUrls');
 const { DEBUG } = require('../config/constants');
 const colors = require('colors');
 
 
 
-const uploadImage = async (imageFile, formData, resolve, reject) => {
+const updateFieldInUsersCollection = async (userHandle, imageUrl, resolve, reject) => {
+  try {
+    await db.doc(`/users/${userHandle}`).update({ imageUrl });
+  } catch(err) {
+    console.error(`${err}`.red);
+    reject({ error: err.code });
+  }
+  resolve({ message: 'Image Uploaded Successfully' });
+};
+
+
+const uploadImageToStorageBucket = async (imageFile, userHandle, bucketName, resolve, reject) => {
   let { filepath, mimetype, imagefilename } = imageFile;
   try {
     await admin
@@ -25,32 +36,25 @@ const uploadImage = async (imageFile, formData, resolve, reject) => {
         }
       });
   } catch(err) {
-    DEBUG && console.error(err);
+    DEBUG && console.error(`${err}`.red);
     reject({ error: 'Error uploading Image.' });
   }
   const imageUrl = `${fbstorage_url}/v0/b/${config.storageBucket}/o/${imagefilename}?alt=media`;
-  formData['contentImage'] = imageUrl;
-  resolve(formData);
+  updateFieldInUsersCollection(userHandle, imageUrl, resolve, reject);
 };
 
 
-const submitScream = async (headers, rawBody) => {
+const changeProfileImage = async (headers, rawBody, userHandle, bucketName) => {
 
   return new Promise((resolve, reject) => {
     const busboy = new BusBoy({ headers: headers });
     let imagefilename;
     let imageToBeUploaded = null;
-    let formData = {};
 
     DEBUG && console.log(colors.magenta({ headers, rawBody }));
 
-    busboy.on('field', (fieldname, val) => {
-      DEBUG && console.log(`${fieldname}: ${val}`.blue);
-      formData[fieldname] = val;
-    });
-
     busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-      DEBUG && console.log(colors.yellow({ fieldname, file, filename, encoding, mimetype }));
+      console.log(colors.yellow({ fieldname, file, filename, encoding, mimetype }));
       if(mimetype !== 'image/jpeg' && mimetype !== 'image/png'){
         reject({ error: 'Wrong file type submitted' });
       }
@@ -61,18 +65,20 @@ const submitScream = async (headers, rawBody) => {
       DEBUG && console.log(colors.yellow({ imageToBeUploaded }));
       file.pipe(fs.createWriteStream(filepath));
     });
-
+  
     busboy.on('finish', async () => {
-      DEBUG && console.log(colors.green({ formData }));
-      formData['contentImage'] = "";
+      DEBUG && console.log({ imageToBeUploaded });
       imageToBeUploaded === null
-       ? resolve(formData)
-       : uploadImage(imageToBeUploaded, formData, resolve, reject);
+       ? reject({ error: 'Image is null.' })
+       : uploadImageToStorageBucket(imageToBeUploaded, userHandle, bucketName, resolve, reject);
     });
-
+  
     busboy.end(rawBody);
   });
 
 };
 
-module.exports = submitScream;
+
+module.exports = {
+  changeProfileImage
+};
