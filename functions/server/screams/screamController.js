@@ -300,6 +300,17 @@ exports.unlikeScream = async (req, res) => {
 };
 
 
+exports.editScream = async (req, res) => {
+  let doc = await db.doc(`/screams/${req.params.screamId}`).get();
+  console.log(colors.blue(req.body));
+  if(!doc.exists){
+    return res.status(404).json({ error: 'Scream Not Found.'});
+  }
+  await doc.ref.update({ body: req.body.text });
+  return res.json(req.body);
+};
+
+
 exports.deleteScream = async (req, res) => {
   const document = db.doc(`/screams/${req.params.screamId}`);
   let doc = await document.get();

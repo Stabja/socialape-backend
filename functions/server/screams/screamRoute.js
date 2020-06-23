@@ -18,6 +18,8 @@ router.get('/by-tag/:tag', screamController.getScreamByTag);
 
 router.post('/', isUserAuthorized, screamController.postOneScream);
 
+router.put('/:screamId', isUserAuthorized, screamController.editScream);
+
 router.delete('/:screamId', isUserAuthorized, screamController.deleteScream);
 
 router.post('/:screamId/like', isUserAuthorized, screamController.likeScream);
