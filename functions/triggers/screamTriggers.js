@@ -117,7 +117,7 @@ exports.onUserImageChange =
       console.log({ before: change.before.data() });
       console.log({ after: change.after.data() });
       if(change.before.data().imageUrl !== change.after.data().imageUrl){
-        let batch = db.batch();
+        let screamBatch = db.batch();
         let screams;
         DEBUG && console.log('STARTING PROFILE IMAGE CHANGE TRIGGER'.green);
         DEBUG && console.log('UPDATING USERIMAGE FIELD IN SCREAMS'.green);
@@ -131,11 +131,12 @@ exports.onUserImageChange =
         }
         screams.forEach(async (doc) => {
           const scream = await db.doc(`/screams/${doc.id}`);
-          batch.update(scream, { userImage: change.after.data().imageUrl });
+          screamBatch.update(scream, { userImage: change.after.data().imageUrl });
         });
-        batch.commit();
+        screamBatch.commit();
         DEBUG && console.log('USERIMAGE FIELD IN SCREAMS UPDATED'.green);
         DEBUG && console.log('UPDATING USERIMAGE FIELD IN COMMENTS'.green);
+        let commentBatch = db.batch();
         let comments;
         try {
           comments = await db.collection('comments')
@@ -147,9 +148,9 @@ exports.onUserImageChange =
         }
         comments.forEach(async (doc) => {
           const comment = await db.doc(`/comments/${doc.id}`);
-          batch.update(comment, { imageUrl: change.after.data().imageUrl });
+          commentBatch.update(comment, { imageUrl: change.after.data().imageUrl });
         });
-        batch.commit();
+        commentBatch.commit();
         DEBUG && console.log('USERIMAGE FIELD IN COMMENTS UPDATED'.green);
       } else return true;
     });
