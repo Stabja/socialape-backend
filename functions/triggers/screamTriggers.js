@@ -130,7 +130,7 @@ exports.onUserImageChange =
         }
         screams.forEach(async (doc) => {
           const scream = await db.doc(`/screams/${doc.id}`);
-          batch.update(scream, { userImage: chanßge.after.data().imageUrl });
+          batch.update(scream, { userImage: change.after.data().imageUrl });
         });
         batch.commit();
         DEBUG && console.log('USERIMAGE FIELD IN SCREAMS UPDATED'.green);
