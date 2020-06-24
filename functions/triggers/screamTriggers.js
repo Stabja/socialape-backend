@@ -71,7 +71,7 @@ exports.onUserNameChange =
       console.log({ before: change.before.data() });
       console.log({ after: change.after.data() });
       if(change.before.data().fullName !== change.after.data().fullName){
-        let batch = db.batch();
+        let screamBatch = db.batch();
         let screams;
         DEBUG && console.log('STARTING PROFILE NAME CHANGE TRIGGER'.green);
         DEBUG && console.log('UPDATING USERNAME FIELD IN SCREAMS'.green);
@@ -85,11 +85,12 @@ exports.onUserNameChange =
         }
         screams.forEach(async (doc) => {
           const scream = await db.doc(`/screams/${doc.id}`);
-          batch.update(scream, { userName: change.after.data().fullName });
+          screamBatch.update(scream, { userName: change.after.data().fullName });
         });
-        batch.commit();
+        screamBatch.commit();
         DEBUG && console.log('USERNAME FIELD IN SCREAMS UPDATED'.green);
         DEBUG && console.log('UPDATING USERNAME FIELD IN COMMENTS'.green);
+        let commentBatch = db.batch();
         let comments;
         try {
           comments = await db.collection('comments')
@@ -101,9 +102,9 @@ exports.onUserNameChange =
         }
         comments.forEach(async (doc) => {
           const comment = await db.doc(`/comments/${doc.id}`);
-          batch.update(comment, { userName: change.after.data().fullName });
+          commentBatch.update(comment, { userName: change.after.data().fullName });
         });
-        batch.commit();
+        commentBatch.commit();
         DEBUG && console.log('USERNAME FIELD IN COMMENTS UPDATED'.green);
       } else return true;
     });
