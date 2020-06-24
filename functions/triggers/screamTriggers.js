@@ -85,9 +85,10 @@ exports.onUserNameChange =
         }
         screams.forEach(async (doc) => {
           const scream = await db.doc(`/screams/${doc.id}`);
-          screamBatch.update(scream, { userName: change.after.data().fullName });
+          await screamBatch.update(scream, { userName: change.after.data().fullName });
+          screamBatch.commit();
         });
-        screamBatch.commit();
+        
         DEBUG && console.log('USERNAME FIELD IN SCREAMS UPDATED'.green);
         DEBUG && console.log('UPDATING USERNAME FIELD IN COMMENTS'.green);
         let commentBatch = db.batch();
@@ -102,9 +103,10 @@ exports.onUserNameChange =
         }
         comments.forEach(async (doc) => {
           const comment = await db.doc(`/comments/${doc.id}`);
-          commentBatch.update(comment, { userName: change.after.data().fullName });
+          await commentBatch.update(comment, { userName: change.after.data().fullName });
+          commentBatch.commit();
         });
-        commentBatch.commit();
+        
         DEBUG && console.log('USERNAME FIELD IN COMMENTS UPDATED'.green);
       } else return true;
     });
@@ -131,9 +133,10 @@ exports.onUserImageChange =
         }
         screams.forEach(async (doc) => {
           const scream = await db.doc(`/screams/${doc.id}`);
-          screamBatch.update(scream, { userImage: change.after.data().imageUrl });
+          await screamBatch.update(scream, { userImage: change.after.data().imageUrl });
+          screamBatch.commit();
         });
-        screamBatch.commit();
+        
         DEBUG && console.log('USERIMAGE FIELD IN SCREAMS UPDATED'.green);
         DEBUG && console.log('UPDATING USERIMAGE FIELD IN COMMENTS'.green);
         let commentBatch = db.batch();
@@ -148,9 +151,10 @@ exports.onUserImageChange =
         }
         comments.forEach(async (doc) => {
           const comment = await db.doc(`/comments/${doc.id}`);
-          commentBatch.update(comment, { imageUrl: change.after.data().imageUrl });
+          await commentBatch.update(comment, { imageUrl: change.after.data().imageUrl });
+          commentBatch.commit();
         });
-        commentBatch.commit();
+        
         DEBUG && console.log('USERIMAGE FIELD IN COMMENTS UPDATED'.green);
       } else return true;
     });
