@@ -179,7 +179,7 @@ exports.createConnectionsFromFollowers = async (req, res) => {
 exports.addFullNameToScreams = async (req, res) => {
   let screams;
   try {
-    screams = await db.collection('screams').get();
+    screams = await db.collection('comments').get();
   } catch(err) {
     return res.status(500).json({ error: 'Cannot Fetch Screams.' });
   }

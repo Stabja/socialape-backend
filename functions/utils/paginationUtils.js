@@ -27,12 +27,13 @@ exports.paginateQuery = (query, baseUrl, pageSize, res) => {
       snapshot.forEach(doc => {
         let docData = doc.data();
         docData.id = doc.id;
+        //docData.comments = [];
         paginatedList.push(docData);
         console.log(doc.id);
       });
       console.log('length: ', paginatedList.length);
       if(paginatedList.length === 0){
-        return res.status(400).json({ error: 'No matching documents found' });
+        return res.json({ collection: [] });
       }
       const nextCursor = paginatedList[paginatedList.length-1].id;
       console.log('next_cursor', nextCursor); 

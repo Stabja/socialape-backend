@@ -53,7 +53,7 @@ exports.getCommentsByScreamId = async (req, res) => {
   let baseUrl = comments_url + `/${screamId}/comments`;
 
   if(!pageSize){
-    return res.status(400).json({ error: 'page_size should not be null' });
+    pageSize = 10;
   }
 
   let firebaseQuery = null;
@@ -74,7 +74,6 @@ exports.getCommentsByScreamId = async (req, res) => {
       .orderBy('createdAt', 'desc')
       .limit(pageSize);
   }
-
   paginateQuery(firebaseQuery, baseUrl, pageSize, res);
 };
 

@@ -60,6 +60,7 @@ exports.createNotificationOnLike = screamTriggers.createNotificationOnLike;
 exports.deleteNotificationOnUnlike = screamTriggers.deleteNotificationOnUnlike;
 exports.createNotificationOnComment = screamTriggers.createNotificationOnComment;
 exports.onUserImageChange = screamTriggers.onUserImageChange;
+exports.onUserNameChange = screamTriggers.onUserNameChange;
 exports.onScreamDelete = screamTriggers.onScreamDelete;
 exports.createNotificationOnFollow = followTriggers.createNotificationOnFollow;
 exports.createNotificationOnFollowBack = followTriggers.createNotificationOnFollowBack;
