@@ -140,16 +140,17 @@ exports.commentOnScream = async (req, res) => {
   }
 
   let screamDoc = await db.doc(`/screams/${req.params.screamId}`).get();
-  if(!screamDoc.exists){
+  if(!screamDoc.exists) {
     return res.status(404).json({ error: 'Scream not found' });
   }
 
   const newComment = {
     body: req.body.body,
-    createdAt: new Date().toISOString(),
     screamId: req.params.screamId,
     userHandle: req.user.handle,
-    imageUrl: req.user.imageUrl
+    userName: req.user.fullName,
+    imageUrl: req.user.imageUrl,
+    createdAt: new Date().toISOString()
   };
 
   try {
@@ -159,7 +160,7 @@ exports.commentOnScream = async (req, res) => {
     return res.status(500).json({ error: 'Something went wrong' });
   }
 
-  await screamDoc.ref.update({ commentCount: doc.data().commentCount + 1 });
+  await screamDoc.ref.update({ commentCount: screamDoc.data().commentCount + 1 });
   DEBUG && console.log(colors.green(newComment));
   return res.json(newComment);
 };

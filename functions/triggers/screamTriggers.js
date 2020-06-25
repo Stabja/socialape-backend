@@ -1,7 +1,7 @@
 const { db } = require('../utils/admin');
 const functions = require('firebase-functions');
 const { DEBUG } = require('../config/constants');
-
+const { asyncForEach } = require('../utils/asyncForEach');
 const trigger = functions.region('asia-east2').firestore;
 
 
@@ -40,7 +40,7 @@ exports.deleteNotificationOnUnlike =
         });
     });
 
-//Triggers
+
 exports.createNotificationOnComment = 
   trigger.document('/comments/{id}')
     .onCreate(snapshot => {
@@ -65,13 +65,14 @@ exports.createNotificationOnComment =
     });
 
 
+// Update userName field in screams and comments on User Profile Image Change
 exports.onUserNameChange =
   trigger.document('/users/{userId}')
     .onUpdate(async (change) => {
       console.log({ before: change.before.data() });
       console.log({ after: change.after.data() });
       if(change.before.data().fullName !== change.after.data().fullName){
-        let screamBatch = db.batch();
+        let batch = db.batch();
         let screams;
         DEBUG && console.log('STARTING PROFILE NAME CHANGE TRIGGER'.green);
         DEBUG && console.log('UPDATING USERNAME FIELD IN SCREAMS'.green);
@@ -83,15 +84,12 @@ exports.onUserNameChange =
           DEBUG && console.log(err);
           return;
         }
-        screams.forEach(async (doc) => {
+        await asyncForEach(screams, async (doc) => {
           const scream = await db.doc(`/screams/${doc.id}`);
-          await screamBatch.update(scream, { userName: change.after.data().fullName });
-          screamBatch.commit();
+          await batch.update(scream, { userName: change.after.data().fullName });
         });
-        
-        DEBUG && console.log('USERNAME FIELD IN SCREAMS UPDATED'.green);
-        DEBUG && console.log('UPDATING USERNAME FIELD IN COMMENTS'.green);
-        let commentBatch = db.batch();
+        DEBUG && console.log('USERNAME FIELD IN SCREAMS UPDATED');
+        DEBUG && console.log('UPDATING USERNAME FIELD IN COMMENTS');
         let comments;
         try {
           comments = await db.collection('comments')
@@ -101,25 +99,24 @@ exports.onUserNameChange =
           DEBUG && console.log(err);
           return;
         }
-        comments.forEach(async (doc) => {
+        await asyncForEach(comments, async (doc) => {
           const comment = await db.doc(`/comments/${doc.id}`);
-          await commentBatch.update(comment, { userName: change.after.data().fullName });
-          commentBatch.commit();
+          await batch.update(comment, { userName: change.after.data().fullName });
         });
-        
+        batch.commit();
         DEBUG && console.log('USERNAME FIELD IN COMMENTS UPDATED'.green);
       } else return true;
     });
   
 
-
+// Update userImage field in screams and comments on User Profile Image Change
 exports.onUserImageChange = 
   trigger.document('/users/{userId}')
     .onUpdate(async (change) => {
       console.log({ before: change.before.data() });
       console.log({ after: change.after.data() });
       if(change.before.data().imageUrl !== change.after.data().imageUrl){
-        let screamBatch = db.batch();
+        let batch = db.batch();
         let screams;
         DEBUG && console.log('STARTING PROFILE IMAGE CHANGE TRIGGER'.green);
         DEBUG && console.log('UPDATING USERIMAGE FIELD IN SCREAMS'.green);
@@ -131,15 +128,12 @@ exports.onUserImageChange =
           DEBUG && console.log({ err });
           return;
         }
-        screams.forEach(async (doc) => {
+        await asyncForEach(screams, async (doc) => {
           const scream = await db.doc(`/screams/${doc.id}`);
-          await screamBatch.update(scream, { userImage: change.after.data().imageUrl });
-          screamBatch.commit();
+          await batch.update(scream, { userImage: change.after.data().imageUrl });
         });
-        
         DEBUG && console.log('USERIMAGE FIELD IN SCREAMS UPDATED'.green);
         DEBUG && console.log('UPDATING USERIMAGE FIELD IN COMMENTS'.green);
-        let commentBatch = db.batch();
         let comments;
         try {
           comments = await db.collection('comments')
@@ -149,12 +143,11 @@ exports.onUserImageChange =
           DEBUG && console.log({ err });
           return;
         }
-        comments.forEach(async (doc) => {
+        await asyncForEach(comments, async (doc) => {
           const comment = await db.doc(`/comments/${doc.id}`);
-          await commentBatch.update(comment, { imageUrl: change.after.data().imageUrl });
-          commentBatch.commit();
+          await batch.update(comment, { imageUrl: change.after.data().imageUrl });
         });
-        
+        batch.commit();
         DEBUG && console.log('USERIMAGE FIELD IN COMMENTS UPDATED'.green);
       } else return true;
     });
@@ -163,38 +156,40 @@ exports.onUserImageChange =
 // Delete all the likes, notifications and comments related to a scream when it is deleted
 exports.onScreamDelete = 
   trigger.document('/screams/{screamId}')
-    .onDelete((snapshot, context) => {
+    .onDelete(async (snapshot, context) => {
       const screamId = context.params.screamId;
       const batch = db.batch();
-      return db
-        .collection('comments')
-        .where('screamId', '==', screamId)
-        .get()
-        .then((data) => {
-          data.forEach(doc => {
-            batch.delete(db.doc(`/comments/${doc.id}`));
-          });
-          return db
-            .collection('likes')
-            .where('screamId', '==', screamId)
-            .get();
-        })
-        .then((data) => {
-          data.forEach((doc) => {
-            batch.delete(db.doc(`/likes/${doc.id}`));
-          });
-          return db
-            .collection('notifications')
-            .where('screamId', '==', screamId)
-            .get();
-        })
-        .then(data => {
-          data.forEach(doc => {
-            batch.delete(db.doc(`/notifications/${doc.id}`));
-          });
-          return batch.commit();
-        })
-        .catch(err => {
-          console.error(err);
-        });
+      let comments, likes, notifications;
+      try {
+        comments = await db
+          .collection('comments')
+          .where('screamId', '==', screamId)
+          .get();
+        likes = await db
+          .collection('likes')
+          .where('screamId', '==', screamId)
+          .get();
+        notifications = await db
+          .collection('notifications')
+          .where('screamId', '==', screamId)
+          .get();
+      } catch(err) {
+        console.error(err);
+      }
+      DEBUG && console.log('DELETING COMMENTS');
+      await Promise.all(comments.map(async (doc) => {
+        await batch.delete(db.doc(`/comments/${doc.id}`));
+      }));
+      DEBUG && console.log('COMMENTS DELETED');
+      DEBUG && console.log('DELETING LIKES');
+      await Promise.all(likes.map(async (doc) => {
+        await batch.delete(db.doc(`/likes/${doc.id}`));
+      }));
+      DEBUG && console.log('LIKES DELETED');
+      DEBUG && console.log('DELETING NOTIFICATIONS');
+      await Promise.all(notifications.map(async (doc) => {
+        await batch.delete(db.doc(`/notifications/${doc.id}`));
+      }));
+      DEBUG && console.log('NOTIFICATIONS DELETED');
+      return batch.commit();
     });

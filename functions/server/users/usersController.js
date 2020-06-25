@@ -259,7 +259,6 @@ exports.getUserDetailsWithAuth = async (req, res) => {
   }
 
   let userData = {};
-
   userData.user = user.data();
   
   let screamsList = usersService.getScreamsCreatedByUser(req.params.handle);

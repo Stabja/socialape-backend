@@ -1,5 +1,5 @@
-const { db, admin } = require('../../utils/admin');
-const config = require('../../utils/getconfig').config;
+const { db } = require('../../utils/admin');
+const { config } = require('../../utils/getconfig');
 const parseFormData = require('../../utils/parseFormData');
 const tagsList = require('../../config/tagList');
 const { fbstorage_url } = require('../../config/externalUrls');
@@ -183,11 +183,10 @@ exports.addFullNameToScreams = async (req, res) => {
   } catch(err) {
     return res.status(500).json({ error: 'Cannot Fetch Screams.' });
   }
-
-  screams.forEach(async (doc) => {
+  await Promise.all(screams.map(async (doc) => {
     let userDoc = await db.doc(`/users/${doc.data().userHandle}`).get();
-    doc.ref.update({ userName: userDoc.data().fullName })
-  });
+    doc.ref.update({ userName: userDoc.data().fullName });
+  }));
 
   return res.json({ message: 'Field added to all screams.' });
 };

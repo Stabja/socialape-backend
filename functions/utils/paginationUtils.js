@@ -1,5 +1,6 @@
 const { db } = require('./admin');
 const querystring = require('querystring');
+const { DEBUG } = require('../config/constants');
 
 
 exports.validateCursor = (cursor, table) => {
@@ -13,7 +14,7 @@ exports.validateCursor = (cursor, table) => {
         return resolve(doc);
       })
       .catch(err => {
-        console.error(err);
+        DEBUG && console.error(err);
         return resolve(err);
       });
   });
@@ -27,16 +28,15 @@ exports.paginateQuery = (query, baseUrl, pageSize, res) => {
       snapshot.forEach(doc => {
         let docData = doc.data();
         docData.id = doc.id;
-        //docData.comments = [];
         paginatedList.push(docData);
-        console.log(doc.id);
+        DEBUG && console.log(doc.id);
       });
-      console.log('length: ', paginatedList.length);
+      DEBUG && console.log('length: ', paginatedList.length);
       if(paginatedList.length === 0){
         return res.json({ collection: [] });
       }
       const nextCursor = paginatedList[paginatedList.length-1].id;
-      console.log('next_cursor', nextCursor); 
+      DEBUG && console.log('next_cursor', nextCursor); 
       let resJson = {};
       resJson['collection'] = paginatedList;
       if(paginatedList.length === pageSize) {
@@ -49,7 +49,7 @@ exports.paginateQuery = (query, baseUrl, pageSize, res) => {
       return res.json(resJson);
     })
     .catch(err => {
-      console.error(err);
+      DEBUG && console.error(err);
       return res.status(500).json({ error: err.code });
     });
 };
