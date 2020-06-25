@@ -177,17 +177,17 @@ exports.onScreamDelete =
         console.error(err);
       }
       DEBUG && console.log('DELETING COMMENTS');
-      await Promise.all(comments.map(async (doc) => {
+      await Promise.all(comments.docs.map(async (doc) => {
         await batch.delete(db.doc(`/comments/${doc.id}`));
       }));
       DEBUG && console.log('COMMENTS DELETED');
       DEBUG && console.log('DELETING LIKES');
-      await Promise.all(likes.map(async (doc) => {
+      await Promise.all(likes.docs.map(async (doc) => {
         await batch.delete(db.doc(`/likes/${doc.id}`));
       }));
       DEBUG && console.log('LIKES DELETED');
       DEBUG && console.log('DELETING NOTIFICATIONS');
-      await Promise.all(notifications.map(async (doc) => {
+      await Promise.all(notifications.docs.map(async (doc) => {
         await batch.delete(db.doc(`/notifications/${doc.id}`));
       }));
       DEBUG && console.log('NOTIFICATIONS DELETED');
