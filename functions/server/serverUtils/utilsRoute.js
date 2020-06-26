@@ -24,5 +24,9 @@ router.post('/create-connections-from-followers', utilsController.createConnecti
 
 router.post('/addFullnameToScreams', utilsController.addFullNameToScreams);
 
+router.delete('/cleanup-likes', utilsController.cleanupLikesCollection);
+
+router.delete('/cleanup-comments', utilsController.cleanupCommentsCollection);
+
 
 module.exports = router;

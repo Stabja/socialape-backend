@@ -72,7 +72,7 @@ exports.onUserNameChange =
       console.log({ before: change.before.data() });
       console.log({ after: change.after.data() });
       if(change.before.data().fullName !== change.after.data().fullName){
-        let batch = db.batch();
+        let screamBatch = db.batch();
         let screams;
         DEBUG && console.log('STARTING PROFILE NAME CHANGE TRIGGER'.green);
         DEBUG && console.log('UPDATING USERNAME FIELD IN SCREAMS'.green);
@@ -86,10 +86,12 @@ exports.onUserNameChange =
         }
         await asyncForEach(screams, async (doc) => {
           const scream = await db.doc(`/screams/${doc.id}`);
-          await batch.update(scream, { userName: change.after.data().fullName });
+          await screamBatch.update(scream, { userName: change.after.data().fullName });
         });
+        screamBatch.commit();
         DEBUG && console.log('USERNAME FIELD IN SCREAMS UPDATED');
         DEBUG && console.log('UPDATING USERNAME FIELD IN COMMENTS');
+        let commentBatch = db.batch();
         let comments;
         try {
           comments = await db.collection('comments')
@@ -101,9 +103,9 @@ exports.onUserNameChange =
         }
         await asyncForEach(comments, async (doc) => {
           const comment = await db.doc(`/comments/${doc.id}`);
-          await batch.update(comment, { userName: change.after.data().fullName });
+          await commentBatch.update(comment, { userName: change.after.data().fullName });
         });
-        batch.commit();
+        commentBatch.commit();
         DEBUG && console.log('USERNAME FIELD IN COMMENTS UPDATED'.green);
       } else return true;
     });
@@ -116,7 +118,7 @@ exports.onUserImageChange =
       console.log({ before: change.before.data() });
       console.log({ after: change.after.data() });
       if(change.before.data().imageUrl !== change.after.data().imageUrl){
-        let batch = db.batch();
+        let screamBatch = db.batch();
         let screams;
         DEBUG && console.log('STARTING PROFILE IMAGE CHANGE TRIGGER'.green);
         DEBUG && console.log('UPDATING USERIMAGE FIELD IN SCREAMS'.green);
@@ -128,12 +130,19 @@ exports.onUserImageChange =
           DEBUG && console.log({ err });
           return;
         }
-        await asyncForEach(screams, async (doc) => {
+        await Promise.all(screams.docs.map(async (doc) => {
+          console.log(`Screams ${doc.id} Updated.`);
           const scream = await db.doc(`/screams/${doc.id}`);
-          await batch.update(scream, { userImage: change.after.data().imageUrl });
-        });
+          await screamBatch.update(scream, { userImage: change.after.data().imageUrl });
+        }));
+        /* await asyncForEach(screams, async (doc) => {
+          const scream = await db.doc(`/screams/${doc.id}`);
+          await screamBatch.update(scream, { userImage: change.after.data().imageUrl });
+        }); */
+        screamBatch.commit();
         DEBUG && console.log('USERIMAGE FIELD IN SCREAMS UPDATED'.green);
         DEBUG && console.log('UPDATING USERIMAGE FIELD IN COMMENTS'.green);
+        let commentBatch = db.batch();
         let comments;
         try {
           comments = await db.collection('comments')
@@ -143,11 +152,16 @@ exports.onUserImageChange =
           DEBUG && console.log({ err });
           return;
         }
-        await asyncForEach(comments, async (doc) => {
+        await Promise.all(comments.docs.map(async (doc) => {
+          console.log(`Comments ${doc.id} Updated`);
           const comment = await db.doc(`/comments/${doc.id}`);
-          await batch.update(comment, { imageUrl: change.after.data().imageUrl });
-        });
-        batch.commit();
+          await commentBatch.update(comment, { imageUrl: change.after.data().imageUrl });
+        }));
+        /* await asyncForEach(comments, async (doc) => {
+          const comment = await db.doc(`/comments/${doc.id}`);
+          await commentBatch.update(comment, { imageUrl: change.after.data().imageUrl });
+        }); */
+        commentBatch.commit();
         DEBUG && console.log('USERIMAGE FIELD IN COMMENTS UPDATED'.green);
       } else return true;
     });
@@ -178,16 +192,19 @@ exports.onScreamDelete =
       }
       DEBUG && console.log('DELETING COMMENTS');
       await Promise.all(comments.docs.map(async (doc) => {
+        console.log(`Comments ${doc.id} Deleted`);
         await batch.delete(db.doc(`/comments/${doc.id}`));
       }));
       DEBUG && console.log('COMMENTS DELETED');
       DEBUG && console.log('DELETING LIKES');
       await Promise.all(likes.docs.map(async (doc) => {
+        console.log(`Likes ${doc.id} Deleted`);
         await batch.delete(db.doc(`/likes/${doc.id}`));
       }));
       DEBUG && console.log('LIKES DELETED');
       DEBUG && console.log('DELETING NOTIFICATIONS');
       await Promise.all(notifications.docs.map(async (doc) => {
+        console.log(`Notification ${doc.id} Deleted`);
         await batch.delete(db.doc(`/notifications/${doc.id}`));
       }));
       DEBUG && console.log('NOTIFICATIONS DELETED');

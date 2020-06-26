@@ -190,3 +190,39 @@ exports.addFullNameToScreams = async (req, res) => {
 
   return res.json({ message: 'Field added to all screams.' });
 };
+
+
+exports.cleanupLikesCollection = async (req, res) => {
+  let likes = await db.collection('likes').get();
+  if(!likes){
+    return res.status(404).json({ error: 'Likes not found.' });
+  }
+  let deletedLikes = [];
+  await Promise.all(likes.docs.map(async (doc) => {
+    let scream = await db.doc(`/screams/${doc.data().screamId}`).get();
+    if(!scream.exists){
+      console.log(`Deleting ${doc.id}`.red);
+      deletedLikes.push(doc.id);
+      await doc.ref.delete();
+    }
+  }));
+  return res.json(deletedLikes);
+};
+
+
+exports.cleanupCommentsCollection = async (req, res) => {
+  let comments = await db.collection('comments').get();
+  if(!comments){
+    return res.status(404).json({ error: 'Comments not found.' });
+  }
+  let deletedComments = [];
+  await Promise.all(comments.docs.map(async (doc) => {
+    let scream = await db.doc(`/screams/${doc.data().screamId}`).get();
+    if(!scream.exists){
+      console.log(`Deleting ${doc.id}`.red);
+      deletedComments.push(doc.id);
+      await doc.ref.delete();
+    }
+  }));
+  return res.json(deletedComments);
+};

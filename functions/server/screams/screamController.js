@@ -219,7 +219,6 @@ exports.postOneScream = async (req, res) => {
   DEBUG && console.log(colors.green(newScreamDoc));
   const resScream = newScreamDoc;
   resScream.screamId = newScreamDoc.id;
-
   return res.json(resScream);
 };
 
