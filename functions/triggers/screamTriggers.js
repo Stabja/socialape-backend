@@ -69,8 +69,8 @@ exports.createNotificationOnComment =
 exports.onUserNameChange =
   trigger.document('/users/{userId}')
     .onUpdate(async (change) => {
-      console.log({ before: change.before.data() });
-      console.log({ after: change.after.data() });
+      //console.log({ before: change.before.data() });
+      //console.log({ after: change.after.data() });
       if(change.before.data().fullName !== change.after.data().fullName){
         let screamBatch = db.batch();
         let screams;
@@ -115,8 +115,8 @@ exports.onUserNameChange =
 exports.onUserImageChange = 
   trigger.document('/users/{userId}')
     .onUpdate(async (change) => {
-      console.log({ before: change.before.data() });
-      console.log({ after: change.after.data() });
+      //console.log({ before: change.before.data() });
+      //console.log({ after: change.after.data() });
       if(change.before.data().imageUrl !== change.after.data().imageUrl){
         let screamBatch = db.batch();
         let screams;

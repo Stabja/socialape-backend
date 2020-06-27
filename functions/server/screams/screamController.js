@@ -62,7 +62,7 @@ exports.getCommentsByScreamId = async (req, res) => {
     if(cursor) {
       firebaseQuery = db.collection('comments')
         .where('screamId', '==', screamId)
-        .orderBy('createdAt', 'desc')
+        .orderBy('createdAt')
         .startAfter(startingDoc)
         .limit(pageSize);
     } else {
@@ -71,7 +71,7 @@ exports.getCommentsByScreamId = async (req, res) => {
   } else {
     firebaseQuery = db.collection('comments')
       .where('screamId', '==', screamId)
-      .orderBy('createdAt', 'desc')
+      .orderBy('createdAt')
       .limit(pageSize);
   }
   paginateQuery(firebaseQuery, baseUrl, pageSize, res);
@@ -305,7 +305,10 @@ exports.editScream = async (req, res) => {
   if(!doc.exists){
     return res.status(404).json({ error: 'Scream Not Found.'});
   }
-  await doc.ref.update({ body: req.body.text });
+  if(doc.data().userHandle !== req.user.handle) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+  await doc.ref.update({ body: req.body.data });
   return res.json(req.body);
 };
 
@@ -321,4 +324,40 @@ exports.deleteScream = async (req, res) => {
   }
   await document.delete();
   return res.json({ message: 'Scream deleted succesfully' });
+};
+
+
+exports.editComment = async (req, res) => {
+  let doc = await db.doc(`/comments/${req.params.commentId}`).get();
+  console.log(colors.blue(req.body));
+  if(!doc.exists){
+    return res.status(404).json({ error: 'Comment Not Found.'});
+  }
+  if(doc.data().userHandle !== req.user.handle) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+  await doc.ref.update({ body: req.body.data });
+  let response = {
+    commentId: doc.id,
+    ...doc.data()
+  };
+  console.log(colors.green({ response }));
+  return res.json(response);
+};
+
+
+exports.deleteComment = async (req, res) => {
+  let doc = await db.doc(`/comments/${req.params.commentId}`).get();
+  if(!doc.exists){
+    return res.status(404).json({ error: 'Comment not found' });
+  }
+  let response = {
+    commentId: doc.id,
+    ...doc.data()
+  };
+  if(doc.data().userHandle !== req.user.handle) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+  await doc.ref.delete();
+  return res.json(response);
 };

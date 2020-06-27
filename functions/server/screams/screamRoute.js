@@ -28,5 +28,9 @@ router.delete('/:screamId/unlike', isUserAuthorized, screamController.unlikeScre
 
 router.post('/:screamId/comment', isUserAuthorized, screamController.commentOnScream);
 
+router.put('/editcomment/:commentId', isUserAuthorized, screamController.editComment);
+
+router.delete('/deletecomment/:commentId', isUserAuthorized, screamController.deleteComment);
+
 
 module.exports = router;
