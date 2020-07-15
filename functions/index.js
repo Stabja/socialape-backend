@@ -6,6 +6,7 @@ const {
 } = require('./utils/customMiddleware');
 const screamTriggers = require('./triggers/screamTriggers');
 const followTriggers = require('./triggers/followTriggers');
+const algoliaTriggers = require('./triggers/algoliaTriggers');
 const routes = require('./routes');
 const express = require('express');
 const cors = require('cors');
@@ -64,3 +65,6 @@ exports.onUserNameChange = screamTriggers.onUserNameChange;
 exports.onScreamDelete = screamTriggers.onScreamDelete;
 exports.createNotificationOnFollow = followTriggers.createNotificationOnFollow;
 exports.createNotificationOnFollowBack = followTriggers.createNotificationOnFollowBack;
+exports.addToAlgoliaIndex = algoliaTriggers.addToIndex;
+exports.updateAlgoliaIndex = algoliaTriggers.updateIndex;
+exports.deleteFromAlgoliaIndex = algoliaTriggers.deleteFromIndex;
