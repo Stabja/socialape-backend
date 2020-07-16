@@ -31,7 +31,7 @@ exports.updateIndex =
 
 exports.deleteFromIndex = 
   trigger.document('/algoliatest/{id}')
-  .onDelete(snapshot => {
-    console.log(`DELETING OBJECT ${snapshot.id} IN ALGOLIA`);
-    index.deleteObject(snapshot.id)
-  });
+    .onDelete(snapshot => {
+      console.log(`DELETING OBJECT ${snapshot.id} IN ALGOLIA`);
+      index.deleteObject(snapshot.id)
+    });
