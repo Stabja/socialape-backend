@@ -14,7 +14,6 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const swaggerUI = require('swagger-ui-express');
 const swagger = require('./swagger/swagger');
-const colors = require('colors');
 require('dotenv').config();
 
 
@@ -65,6 +64,6 @@ exports.onUserNameChange = screamTriggers.onUserNameChange;
 exports.onScreamDelete = screamTriggers.onScreamDelete;
 exports.createNotificationOnFollow = followTriggers.createNotificationOnFollow;
 exports.createNotificationOnFollowBack = followTriggers.createNotificationOnFollowBack;
-exports.addToAlgoliaIndex = algoliaTriggers.addToIndex;
-exports.updateAlgoliaIndex = algoliaTriggers.updateIndex;
-exports.deleteFromAlgoliaIndex = algoliaTriggers.deleteFromIndex;
+exports.addToIndex = algoliaTriggers.addToIndex;
+exports.updateIndex = algoliaTriggers.updateIndex;
+exports.deleteFromIndex = algoliaTriggers.deleteFromIndex;
