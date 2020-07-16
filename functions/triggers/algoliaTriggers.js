@@ -9,13 +9,14 @@ const client = algoliasearch(APP_ID, ADMIN_KEY);
 const index = client.initIndex('test_index');
 
 
+
 exports.addToIndex = 
   trigger.document('/algoliatest/{id}')
     .onCreate(snapshot => {
       const data = snapshot.data();
       const objectId = snapshot.id;
       console.log(`CREATING OBJECT ${objectId} IN ALGOLIA`);
-      return index.addObject({ ...data, objectId });
+      return index.saveObject({ ...data, objectId });
     });
 
 
