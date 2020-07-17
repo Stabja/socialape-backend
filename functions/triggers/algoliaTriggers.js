@@ -14,9 +14,9 @@ exports.addToIndex =
   trigger.document('/algoliatest/{id}')
     .onCreate(snapshot => {
       const data = snapshot.data();
-      const objectId = snapshot.id;
-      console.log(`CREATING OBJECT ${objectId} IN ALGOLIA`);
-      return index.saveObject({ ...data, objectId });
+      const objectID = snapshot.id;
+      console.log(`CREATING OBJECT ${objectID} IN ALGOLIA`);
+      return index.saveObject({ ...data, objectID });
     });
 
 
@@ -24,9 +24,9 @@ exports.updateIndex =
   trigger.document('/algoliatest/{id}')
     .onUpdate((change) => {
       const newData = change.after.data();
-      const objectId = change.after.id;
-      console.log(`MODIFYING OBJECT ${objectId} IN ALGOLIA`);
-      return index.saveObject({ ...newData, objectId });
+      const objectID = change.after.id;
+      console.log(`MODIFYING OBJECT ${objectID} IN ALGOLIA`);
+      return index.saveObject({ ...newData, objectID });
     });
 
 

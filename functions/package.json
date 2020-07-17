@@ -37,7 +37,8 @@
     "querystring": "^0.2.0",
     "request": "^2.88.2",
     "request-retry": "^1.0.0",
-    "swagger-ui-express": "^3.0.10"
+    "swagger-ui-express": "^3.0.10",
+    "uuid": "^8.2.0"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.1.6"

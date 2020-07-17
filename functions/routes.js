@@ -7,6 +7,7 @@ const notificationRoute = require('./server/notifications/notificationRoute');
 const utilsRoute = require('./server/serverUtils/utilsRoute');
 const trackRoute = require('./server/tracks/trackRoute');
 const nytarticleRoute = require('./server/nytarticles/nytarticleRoute');
+const algoliaRoute = require('./server/algolia/algoliaRoute');
 
 
 
@@ -29,5 +30,7 @@ module.exports = (app) => {
   app.use('/tracks', trackRoute);
 
   app.use('/nytarticles', nytarticleRoute);
+
+  app.use('/algolia', algoliaRoute);
 
 };
