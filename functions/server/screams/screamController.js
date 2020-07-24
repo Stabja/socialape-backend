@@ -166,7 +166,6 @@ exports.commentOnScream = async (req, res) => {
 };
 
 
-// Tricky function. Involves parsing FormData using Busboy
 exports.postOneScream = async (req, res) => {
   // First upload the image and get the path, then post the Scream object
   let parsedFormData;
@@ -175,15 +174,12 @@ exports.postOneScream = async (req, res) => {
   } catch(err) {
     return res.status(400).json(err);
   }
-  DEBUG && console.log(colors.cyan({ parsedFormData }));
-
   if(parsedFormData.body.trim() === '') {
     return res.status(400).json({ body: 'Body must not be empty' });
   }
 
   // Convert parsedFormData.tagList to List
   const tagsList = parsedFormData.tagList.split(',');
-
   const newScream = {
     body: parsedFormData.body,
     userHandle: req.user.handle,
@@ -207,19 +203,25 @@ exports.postOneScream = async (req, res) => {
   });
   tagsList.forEach(tag => {
     if(!fetchedTagList.includes(tag)){
-      db.collection('tags').doc(tag).set({});
+      db.doc(`/tags/${tag}`).set({});
     }
   });
 
-  // Add the new Scream in 'screams' collection 
-  let newScreamDoc = await db.collection('screams').add(newScream);
-  if(!newScreamDoc){
+  // Add the new Scream in 'screams' collection
+  let screamDoc;
+  try {
+    screamDoc = await db.collection('screams').add(newScream);
+  } catch(err) {
+    DEBUG && console.log(`${err}`.red);
     return res.status(500).json({ error: 'Something went wrong' });
-  }
-  DEBUG && console.log(colors.green(newScreamDoc));
-  const resScream = newScreamDoc;
-  resScream.screamId = newScreamDoc.id;
-  return res.json(resScream);
+  };
+  
+  newScream.id = screamDoc.id;
+  DEBUG && console.log(colors.green(JSON.stringify(newScream, null, 4)));
+
+  // Update the id in the newly created Scream
+  await db.doc(`/screams/${screamDoc.id}`).update({ id: screamDoc.id });
+  return res.json(newScream);
 };
 
 
@@ -276,7 +278,7 @@ exports.unlikeScream = async (req, res) => {
   if(!screamDoc.exists) {
     return res.status(404).json({ error: 'Scream not found' });
   }
-  screamData = screamDoc.data()
+  screamData = screamDoc.data();
   screamData.screamId = screamDoc.id;
 
   let likeDoc = await likeDocument.get();
@@ -301,7 +303,6 @@ exports.unlikeScream = async (req, res) => {
 
 exports.editScream = async (req, res) => {
   let doc = await db.doc(`/screams/${req.params.screamId}`).get();
-  console.log(colors.blue(req.body));
   if(!doc.exists){
     return res.status(404).json({ error: 'Scream Not Found.'});
   }
@@ -309,6 +310,7 @@ exports.editScream = async (req, res) => {
     return res.status(403).json({ error: 'Unauthorized' });
   }
   await doc.ref.update({ body: req.body.data });
+  console.log(colors.cyan(req.body));
   return res.json(req.body);
 };
 

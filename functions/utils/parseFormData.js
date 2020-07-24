@@ -25,7 +25,7 @@ const uploadImage = async (imageFile, formData, resolve, reject) => {
         }
       });
   } catch(err) {
-    DEBUG && console.error(err);
+    //DEBUG && console.error(err);
     reject({ error: 'Error uploading Image.' });
   }
   const imageUrl = `${fbstorage_url}/v0/b/${config.storageBucket}/o/${imagefilename}?alt=media`;
@@ -42,15 +42,15 @@ const submitScream = async (headers, rawBody) => {
     let imageToBeUploaded = null;
     let formData = {};
 
-    DEBUG && console.log(colors.magenta({ headers, rawBody }));
+    //DEBUG && console.log(colors.magenta({ headers, rawBody }));
 
     busboy.on('field', (fieldname, val) => {
-      DEBUG && console.log(`${fieldname}: ${val}`.blue);
+      //DEBUG && console.log(`${fieldname}: ${val}`.blue);
       formData[fieldname] = val;
     });
 
     busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-      DEBUG && console.log(colors.yellow({ fieldname, file, filename, encoding, mimetype }));
+      //DEBUG && console.log(colors.yellow({ fieldname, file, filename, encoding, mimetype }));
       if(mimetype !== 'image/jpeg' && mimetype !== 'image/png'){
         reject({ error: 'Wrong file type submitted' });
       }
@@ -58,12 +58,12 @@ const submitScream = async (headers, rawBody) => {
       imagefilename = `${Math.round(Math.random() * 100000000000)}.${imageExtension}`;  // 32756238461724837.png
       const filepath = path.join(os.tmpdir(), imagefilename);
       imageToBeUploaded = { filepath, mimetype, imagefilename };
-      DEBUG && console.log(colors.yellow({ imageToBeUploaded }));
+      //DEBUG && console.log(colors.yellow({ imageToBeUploaded }));
       file.pipe(fs.createWriteStream(filepath));
     });
 
     busboy.on('finish', async () => {
-      DEBUG && console.log(colors.green({ formData }));
+      //DEBUG && console.log(colors.green({ formData }));
       formData['contentImage'] = "";
       imageToBeUploaded === null
        ? resolve(formData)
