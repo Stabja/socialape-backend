@@ -1,7 +1,3 @@
-## Web Server
-
-https://gamer-rank.com/
-
 ### `npm start`
 
 Runs the app in the development mode.<br />
