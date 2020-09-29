@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
     admin.auth().verifyIdToken(idToken)
       .then(decodedToken => {
         req.user = decodedToken;
-        console.log('decodedToken', decodedToken);
+        //console.log('decodedToken', decodedToken);
         return db
           .collection('users')
           .where('userId', '==', req.user.uid)
@@ -21,12 +21,11 @@ module.exports = (req, res, next) => {
         return next();
       })
       .catch(err => {
-        console.error('Error while verifying token ', err);
+        console.log('Error while verifying token.');
         return res.status(403).json(err);
       });
 
   } else {
-    //return res.status(403).json({ error: 'Unauthorized' });
     let userData = {};
     db.doc(`/users/${req.params.handle}`).get()
       .then((doc) => {
@@ -45,6 +44,8 @@ module.exports = (req, res, next) => {
         userData.screams = [];
         data.forEach(doc => {
           userData.screams.push({
+            contentImage: doc.data().contentImage,
+            tagList: doc.data().tagList,
             body: doc.data().body,
             createdAt: doc.data().createdAt,
             userHandle: doc.data().userHandle,

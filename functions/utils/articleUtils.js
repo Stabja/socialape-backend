@@ -33,7 +33,7 @@ exports.shortenArticle = (article) => {
   const defaultCover = default_cover;
   let newArticle = {};
   newArticle['_id'] = article._id
-  fillMissingValues();
+  //fillMissingValues();
   let personList = [];
   if(article.byline) {
     article.byline.person && article.byline.person.forEach(p => {
@@ -118,7 +118,7 @@ exports.shortenArticle = (article) => {
 
 
 const fillMissingValues = () => {
-  /* article._id.substr(6, 5) === 'artic'
+  article._id.substr(6, 5) === 'artic'
     ? newArticle['_id'] = article._id.split('nyt://article/')[1]
     : article._id.substr(6, 5) === 'inter'
     ? newArticle['_id'] = article._id.split('nyt://interactive/')[1]
@@ -131,7 +131,7 @@ const fillMissingValues = () => {
     : newArticle['_id'] = article._id
   var pattern = "-";
   let re = new RegExp(pattern, "g");  
-  newArticle['_id'] = newArticle['_id'].replace(re, ''); */
+  newArticle['_id'] = newArticle['_id'].replace(re, '');
 };
 
 

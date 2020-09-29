@@ -1,18 +1,18 @@
-const { db, admin } = require('../util/admin');
+const { db } = require('../../utils/admin');
 const request = require('request');
 const axios = require('axios');
 const querystring = require('querystring');
-const articlesData = require('../util/nytArticlesData');
-const { nytarticles_url } = require('../config/externalUrls');
+const articlesData = require('../../utils/nytArticlesData');
+const { nytarticles_url } = require('../../config/externalUrls');
 const {
   addDataAsync,
   shortenArticle,
   lowercaseArticle,
-} = require('../util/articleUtils');
+} = require('../../utils/articleUtils');
 const {
   validateCursor,
   paginateQuery
-} = require('../util/paginationUtils');
+} = require('../../utils/paginationUtils');
 
 
 
@@ -151,7 +151,7 @@ exports.fetchArticlesUsingPagination = async (req, res) => {
     if(startingDoc) {
       firebaseQuery = db.collection('nytarticles')
         .orderBy('pub_date', 'desc')
-        .select('pub_date')
+        //.select('pub_date')
         .startAfter(startingDoc)
         .limit(pageSize);
     } else {
@@ -160,7 +160,7 @@ exports.fetchArticlesUsingPagination = async (req, res) => {
   } else {
     firebaseQuery = db.collection('nytarticles')
       .orderBy('pub_date', 'desc')
-      .select('pub_date')
+      //.select('pub_date')
       .limit(pageSize);
   }
 

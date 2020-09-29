@@ -1,0 +1,9 @@
+{
+  "algolia": {
+    "adminkey": "2b0975aa7d5dadc7ff1453a56b76cf93",
+    "appid": "AOU1HDRIKT"
+  },
+  "runtime": {
+    "env": "development"
+  }
+}
