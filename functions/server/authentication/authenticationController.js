@@ -79,7 +79,7 @@ exports.login = async (req, res) => {
     return res.status(403).json({ general: 'Wrong credentials, please try again' });
   };
 
-  console.log(colors.green({ loginData }));
+  console.log(colors.green(loginData.user.refreshToken));
 
   let token = await loginData.user.getIdToken();
   if(!token){

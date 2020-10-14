@@ -1,5 +1,5 @@
 module.exports = {
-  apiKey: "AIzaSyAFncp-KnoVh7qHzJld0O5xf9tvc_Q8QBk",
+  apiKey: "AIzaSyDvDrcDyaUvav7lAwedl9LQxnfFzPemYDE",
   authDomain: "socialape-d8699.firebaseapp.com",
   databaseURL: "https://socialape-d8699.firebaseio.com",
   projectId: "socialape-d8699",
