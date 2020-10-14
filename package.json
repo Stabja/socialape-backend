@@ -13,6 +13,5 @@
   "engines": {
     "node": "10"
   },
-  "dependencies": {},
   "private": true
 }

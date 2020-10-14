@@ -4,11 +4,13 @@ const router = express.Router();
 const algoliaController = require('./algoliaController');
 
 
-router.get('/add-index', algoliaController.addToAlgoliaIndex);
+router.post('/add-index', algoliaController.addToAlgoliaIndex);
 
-router.get('/update-index/:objectID', algoliaController.updateAlgoliaIndex);
+router.put('/update-index/:objectID', algoliaController.updateAlgoliaIndex);
 
-router.get('/delete-index/:objectID', algoliaController.deleteFromIndex);
+router.delete('/delete-index/:objectID', algoliaController.deleteFromIndex);
+
+router.post('/import-index', algoliaController.importAlgoliaIndex);
 
 
 module.exports = router;

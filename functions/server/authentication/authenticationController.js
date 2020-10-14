@@ -74,7 +74,7 @@ exports.login = async (req, res) => {
   try {
     loginData = await firebase
       .auth()
-      .signInWithEmailAndPassword(user.email, user.password)
+      .signInWithEmailAndPassword(user.email, user.password);
   } catch {
     return res.status(403).json({ general: 'Wrong credentials, please try again' });
   };
